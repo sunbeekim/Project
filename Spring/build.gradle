@@ -4,14 +4,10 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
+
+
 
 repositories {
 	mavenCentral()
@@ -20,8 +16,17 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web' // REST API
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+    runtimeOnly 'com.mysql:mysql-connector-j' // MySQL 드라이버
+    testImplementation 'org.springframework.boot:spring-boot-starter-test' // 테스트
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
 }
 
 tasks.named('test') {
