@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const SignUp = () => {
   const [formData, setFormData] = useState({
     user_id: "",
-    username: "",
+    forename: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -15,13 +15,11 @@ const SignUp = () => {
   });
   const [errors, setErrors] = useState({});
 
-  // 입력 필드 값 업데이트
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
-  // 서버로 데이터 전송 (회원가입 요청)
   const fetchSignUp = async () => {
     try {
       const response = await axios.post("/api/users/signup", formData);
@@ -33,17 +31,18 @@ const SignUp = () => {
     }
   };
 
-  // 폼 제출 처리
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
-    // 이름 검사
+
+    // ID 검사
     if (formData.user_id.trim() === "") {
       newErrors.user_id = "ID를 입력해주세요.";
     }
+
     // 이름 검사
-    if (formData.username.trim() === "") {
-      newErrors.username = "이름을 입력해주세요.";
+    if (formData.forename.trim() === "") {
+      newErrors.forename = "이름을 입력해주세요.";
     }
 
     // 이메일 검사
@@ -57,17 +56,17 @@ const SignUp = () => {
       newErrors.password = "비밀번호는 최소 6자 이상이어야 합니다.";
     }
 
-    if (formData.phone_number.trim() && formData.phone_number.length < 11) {
-      newErrors.phone_number = "유효하지 않은 전화번호입니다.";
-    }
-    // 비밀번호 확인 검사
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
     }
 
-    // 에러가 없으면 서버로 데이터 전송
+    // 전화번호 검사
+    if (formData.phone_number.trim() && formData.phone_number.length < 11) {
+      newErrors.phone_number = "유효하지 않은 전화번호입니다.";
+    }
+
     if (Object.keys(newErrors).length === 0) {
-      fetchSignUp(); // 서버로 전송
+      fetchSignUp();
     } else {
       setErrors(newErrors);
     }
@@ -79,7 +78,7 @@ const SignUp = () => {
         <h2>회원가입</h2>
 
         <div>
-          <label htmlFor="username">ID</label>
+          <label htmlFor="user_id">ID</label>
           <input
             type="text"
             id="user_id"
@@ -89,6 +88,7 @@ const SignUp = () => {
           />
           {errors.user_id && <small className="error-msg">{errors.user_id}</small>}
         </div>
+
         <div>
           <label htmlFor="password">비밀번호</label>
           <input
@@ -114,15 +114,15 @@ const SignUp = () => {
         </div>
 
         <div>
-          <label htmlFor="username">이름</label>
+          <label htmlFor="forename">이름</label>
           <input
             type="text"
-            id="username"
+            id="forename"
             placeholder="이름을 입력하세요"
-            value={formData.username}
+            value={formData.forename}
             onChange={handleChange}
           />
-          {errors.username && <small className="error-msg">{errors.username}</small>}
+          {errors.forename && <small className="error-msg">{errors.forename}</small>}
         </div>
 
         <div>
@@ -151,9 +151,6 @@ const SignUp = () => {
 
         <button type="submit">회원가입</button>
       </form>
-      <p>
-        이미 계정이 있으신가요? <Link to="/login">로그인</Link>
-      </p>
     </div>
   );
 };
