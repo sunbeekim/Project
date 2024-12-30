@@ -1,0 +1,34 @@
+CREATE database project_db; -- db생성
+show tables;
+
+use project_db; -- db사용
+select * 
+from users_login; -- 테이블 조회
+select * 
+from users_data;
+
+-- drop table users_login; -- 테이블 지우기
+-- drop table users_data;
+
+describe users_login;
+describe users_data;
+
+
+CREATE TABLE users_login (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- users_login 테이블의 고유 식별넘버
+    user_id VARCHAR(50) NOT NULL UNIQUE, -- 사용자 아이디 (유일값)
+    password VARCHAR(255) NOT NULL, -- 비밀번호 나중에 해시 알고리즘으로 변환
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 날짜 자동 생성
+);
+
+CREATE TABLE users_data (
+    id INT PRIMARY KEY, -- users_id 테이블의 id를 참조 users_login의 테이블
+    -- id는 기본키이지만, 혼자 존재할 수 없음. 외래키로써 users_login의 id를 참조하기 때문임
+    -- 그래서 user_login에 없는 id는 users_data에서 insert 불가.
+    -- 맨 아래 foreign key 에 on delete cascade 기능을 설정해서 users_login 의 id 지우면
+    -- users_data 의 id 행도 지워짐
+    forename varchar(255) not null, -- 사용자 이름
+    email VARCHAR(100) not null UNIQUE, -- 이메일 주소
+    phone_number VARCHAR(20), -- 전화번호
+    FOREIGN KEY (id) REFERENCES users_login(id) ON DELETE CASCADE -- 관계 설정
+);
