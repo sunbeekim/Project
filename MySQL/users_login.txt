@@ -1,0 +1,14 @@
+id	int(11)	NO	PRI		auto_increment
+userId	varchar(255)	NO	UNI		
+password	varchar(255)	NO			
+createdAt	timestamp	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+
+
+users_login	CREATE TABLE `users_login` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `userId` varchar(255) NOT NULL,
+   `password` varchar(255) NOT NULL,
+   `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `userId` (`userId`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

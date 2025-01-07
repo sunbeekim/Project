@@ -1,0 +1,15 @@
+id	int(11)	NO	PRI		
+forename	varchar(255)	NO			
+email	varchar(100)	NO	UNI		
+phoneNumber	varchar(20)	YES			
+
+
+users_data	CREATE TABLE `users_data` (
+   `id` int(11) NOT NULL,
+   `forename` varchar(255) NOT NULL,
+   `email` varchar(100) NOT NULL,
+   `phoneNumber` varchar(20) DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `email` (`email`),
+   CONSTRAINT `users_data_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users_login` (`id`) ON DELETE CASCADE
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

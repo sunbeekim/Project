@@ -6,29 +6,29 @@
 
     <!-- ID로 사용자 조회 -->
     <select id="findById" parameterType="long" resultType="com.example.demo.model.User">
-        SELECT id, user_id, password, created_at 
+        SELECT id, userId, password, createdAt 
         FROM users_login 
         WHERE id = #{id}
     </select>
 
     <!-- users_login 테이블에 사용자 삽입 -->
     <insert id="insertUser" parameterType="com.example.demo.model.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO users_login (user_id, password)
-        VALUES (#{user_id}, #{password})
+        INSERT INTO users_login (userId, password)
+        VALUES (#{userId}, #{password})
     </insert>
 
     <!-- users_data 테이블에 사용자 데이터 삽입 -->
     <insert id="insertUserData" parameterType="com.example.demo.model.UserData">
-        INSERT INTO users_data (id, forename, email, phone_number)
-        VALUES (#{id}, #{forename}, #{email}, #{phone_number})
+        INSERT INTO users_data (id, forename, email, phoneNumber)
+        VALUES (#{id}, #{forename}, #{email}, #{phoneNumber})
     </insert>
 
-    <!-- 추가 가능: user_id 또는 email 중복 여부 확인 -->
+    <!-- 추가 가능: userId 또는 email 중복 여부 확인 -->
     <select id="isUserIdExists" parameterType="string" resultType="boolean">
         SELECT EXISTS (
             SELECT 1 
             FROM users_login 
-            WHERE user_id = #{user_id}
+            WHERE userId = #{userId}
         )
     </select>
 
