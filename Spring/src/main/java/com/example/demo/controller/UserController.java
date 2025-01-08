@@ -25,20 +25,8 @@ public class UserController {
   // 회원가입
   @PostMapping("/signup")
   public ResponseEntity<String> createUser(@RequestBody UserRequest userRequest) {
-    // users_login 테이블 데이터를 생성
-    User user = new User();
-    user.setUserId(userRequest.getUserId()); // DTO에서 가져온 userId 설정
-    user.setPassword(userRequest.getPassword()); // DTO에서 가져온 password 설정
-
-    // users_data 테이블 데이터를 생성
-    UserData userData = new UserData();
-    userData.setForename(userRequest.getForename()); // DTO에서 가져온 forename 설정
-    userData.setEmail(userRequest.getEmail()); // DTO에서 가져온 email 설정
-    userData.setPhoneNumber(userRequest.getPhoneNumber()); // DTO에서 가져온 phoneNumber 설정
-
-    // UserService를 통해 두 테이블에 삽입
-    userService.createUser(user, userData);
-
+    // UserService에서 User와 UserData를 처리하도록 위임
+    userService.createUser(userRequest);
     return ResponseEntity.ok("User created successfully");
   }
 }
