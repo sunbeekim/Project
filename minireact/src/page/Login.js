@@ -24,7 +24,7 @@ const Login = () => {
       </div>
     
     <div>
-      <label htmlfor="userpassword">비밀번호호</label>
+      <label htmlfor="userpassword">비밀번호</label>
         <input type="password" name="password" id="password" value={"password"}placeholder="비밀번호호를 입력하세요" ></input>
     
         </div>
