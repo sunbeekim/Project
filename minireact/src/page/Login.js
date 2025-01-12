@@ -67,7 +67,7 @@ const Login = () => {
     
     <div>
       <label htmlfor="userpassword">비밀번호</label>
-        <input type="password" name="password" id="password" value={"userpassword"} onChange={(e) => setUserpassword(e.target.value)} placeholder="비밀번호호를 입력하세요" ></input>
+        <input type="password" name="userpassword" id="userpassword" value={"userpassword"} onChange={(e) => setUserpassword(e.target.value)} placeholder="비밀번호호를 입력하세요" ></input>
     
         </div>
 
