@@ -19,6 +19,7 @@ import { CheckSessionAPI, LogoutAPI } from './api/UserAPI.js';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -54,30 +55,44 @@ const App = () => {
     <Router>
       <div className="d-flex flex-column vh-100">
         {/* 네비게이션 바 */}
-        <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+        <Navbar
+          bg="dark"
+          variant="dark"
+          expand="lg"
+          collapseOnSelect
+          expanded={expanded} // 상태에 따라 확장 상태를 조절
+          onToggle={(isOpen) => setExpanded(isOpen)} // 토글 상태를 업데이트
+        >
           <Container>
-            <Navbar.Brand as={Link} to="/">
+            <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
               My Movie App
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarNav" />
             <Navbar.Collapse id="navbarNav">
               <Nav className="ms-auto">
-                <Nav.Link as={Link} to="/">
+                <Nav.Link as={Link} to="/" onClick={() => setExpanded(false)}>
                   홈
                 </Nav.Link>
-                <Nav.Link as={Link} to="/board">
+                <Nav.Link as={Link} to="/board" onClick={() => setExpanded(false)}>
                   게시판
                 </Nav.Link>
-                <Nav.Link as={Link} to="/movie-booking">
+                <Nav.Link as={Link} to="/movie-booking" onClick={() => setExpanded(false)}>
                   영화 예매
                 </Nav.Link>
-                <Nav.Link as={Link} to="/my-movies">
+                <Nav.Link as={Link} to="/my-movies" onClick={() => setExpanded(false)}>
                   나의 영화
                 </Nav.Link>
                 {isLoggedIn ? (
                   <>
-                    <Nav.Link>로그인 ID : {userId}</Nav.Link>
-                    <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
+                    <Nav.Link>안녕하세요, {userId}님!</Nav.Link>
+                    <Nav.Link
+                      onClick={() => {
+                        handleLogout();
+                        setExpanded(false);
+                      }}
+                    >
+                      로그아웃
+                    </Nav.Link>
                   </>
                 ) : (
                   <>

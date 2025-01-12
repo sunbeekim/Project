@@ -1,10 +1,13 @@
 // minireact/src/page/SignUp.js
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IdCheckAPI, SingupAPI } from '../api/UserAPI';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     userId: '',
     forename: '',
@@ -16,9 +19,77 @@ const SignUp = () => {
   const [errors, setErrors] = useState({});
   const [userIdCheck, setUserIdCheck] = useState(false);
 
+  const validate = (name, value) => {
+    const newErrors = { ...errors };
+
+    // 필드별 검증 로직
+    switch (name) {
+      case 'userId':
+        if (value.trim() === '') {
+          newErrors.userId = 'ID를 입력해주세요.';
+        } else if (!userIdCheck) {
+          newErrors.userId = '중복확인을 해주세요.';
+        } else {
+          delete newErrors.userId;
+        }
+        break;
+
+      case 'forename':
+        if (value.trim() === '') {
+          newErrors.forename = '이름을 입력해주세요.';
+        } else {
+          delete newErrors.forename;
+        }
+        break;
+
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          newErrors.email = '올바른 이메일 형식을 입력해주세요.';
+        } else {
+          delete newErrors.email;
+        }
+        break;
+
+      case 'password':
+        if (value.length < 6) {
+          newErrors.password = '비밀번호는 최소 6자 이상이어야 합니다.';
+        } else {
+          delete newErrors.password;
+        }
+        break;
+
+      case 'confirmPassword':
+        if (value !== formData.password) {
+          newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
+        } else {
+          delete newErrors.confirmPassword;
+        }
+        break;
+
+      case 'phoneNumber':
+        if (value.trim() && value.length < 11) {
+          newErrors.phoneNumber = '유효하지 않은 전화번호입니다.';
+        } else {
+          delete newErrors.phoneNumber;
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(newErrors);
+  };
+
   const handleChange = (e) => {
     const { id, value } = e.target;
+
+    // 실시간 값 업데이트
     setFormData({ ...formData, [id]: value });
+
+    // 실시간 검증
+    validate(id, value);
   };
 
   const fetchSignUp = async () => {
@@ -35,60 +106,36 @@ const SignUp = () => {
   const handleCheck = async () => {
     if (formData.userId.trim() === '') {
       alert('ID를 입력해주세요.');
-      return; // userId가 비어 있으면 중단
+      return;
     }
     try {
-      const message = await IdCheckAPI(formData.userId); // API 호출
-      alert(message.data); // 서버 응답 메시지를 표시
+      const message = await IdCheckAPI(formData.userId);
+      alert(message.data);
       setUserIdCheck(true);
+      setErrors((prevErrors) => {
+        const { userId, ...rest } = prevErrors; // userId를 제외한 나머지 필드 추출
+        return rest; // userId가 삭제된 새 객체 반환
+      });
     } catch (error) {
       console.error('ID CHECK', error);
-      alert(`이미 존재하는 아이디 입니다.`); // 에러 메시지 표시
+      alert('이미 존재하는 아이디 입니다.');
       setUserIdCheck(false);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        userId: '이미 존재하는 아이디입니다.'
+      }));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = {};
 
-    // ID 검사
-    if (formData.userId.trim() === '') {
-      newErrors.userId = 'ID를 입력해주세요.';
-    }
-    if (userIdCheck === true && formData.userId.trim() !== '') {
-      newErrors.userId = '중복확인을 해주세요.';
-    }
-
-    // 이름 검사
-    if (formData.forename.trim() === '') {
-      newErrors.forename = '이름을 입력해주세요.';
-    }
-
-    // 이메일 검사
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      newErrors.email = '올바른 이메일 형식을 입력해주세요.';
-    }
-
-    // 비밀번호 검사
-    if (formData.password.length < 6) {
-      newErrors.password = '비밀번호는 최소 6자 이상이어야 합니다.';
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
-    }
-
-    // 전화번호 검사
-    if (formData.phoneNumber.trim() && formData.phoneNumber.length < 11) {
-      newErrors.phoneNumber = '유효하지 않은 전화번호입니다.';
-    }
-
-    if (Object.keys(newErrors).length === 0) {
+    // 최종 유효성 검사
+    if (Object.keys(errors).length === 0 && userIdCheck) {
       fetchSignUp();
+      navigate('/');
     } else {
-      setErrors(newErrors);
+      alert('모든 입력값을 올바르게 작성해주세요.');
     }
   };
 
