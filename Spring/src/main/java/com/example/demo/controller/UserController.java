@@ -34,6 +34,10 @@ public class UserController {
   // 로그인
   @PostMapping("/login")
   public ResponseEntity<String> login(@RequestBody LoginRequest login) {
+
+    System.out.println("로그인 아이디 : " + login.getUserId());
+    System.out.println("로그인 패스워드 : " + login.getPassword());
+
     boolean isValid = userService.validUser(login);
 
     if (isValid) {

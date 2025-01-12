@@ -3,6 +3,7 @@ import axios from 'axios';
 const springAPI = 'http://localhost:8080/api/users';
 
 export const LoginAPI = async (formData) => {
+  console.log(`${springAPI}/login`);
   try {
     const response = await axios.post(`${springAPI}/login`, formData);
     return response; // 성공 응답 반환

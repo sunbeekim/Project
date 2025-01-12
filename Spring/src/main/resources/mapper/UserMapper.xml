@@ -4,11 +4,16 @@
 
 <mapper namespace="com.example.demo.mapper.UserMapper">
 
-    <!-- ID로 사용자 조회 -->
+    <!-- 고유 ID로 사용자 조회 -->
     <select id="findById" parameterType="long" resultType="com.example.demo.model.User">
         SELECT id, userId, password, createdAt 
         FROM users_login 
         WHERE id = #{id}
+    </select>
+    
+    <!-- 사용자 ID로 사용자 조회 -->
+    <select id="findByUserId" parameterType="String" resultType="com.example.demo.model.User">
+        SELECT * FROM users_login WHERE userId = #{userId}
     </select>
 
     <!-- users_login 테이블에 사용자 삽입 -->

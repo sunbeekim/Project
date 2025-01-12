@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.UserRequest;
 import com.example.demo.model.*;
 import org.apache.ibatis.session.SqlSession;
@@ -39,6 +40,19 @@ public class UserService {
       System.err.println("Error in createUser: " + e.getMessage());
       throw e;
     }
+  }
+
+  public boolean validUser(LoginRequest login) {
+    // MyBatis를 이용해 userId로 사용자 정보 조회
+    User user = sqlSession.selectOne(
+        "com.example.demo.mapper.UserMapper.findByUserId",
+        login.getUserId());
+
+    if (user != null && user.getPassword().equals(login.getPassword())) {
+      return true;
+    }
+
+    return false;
   }
 
 }
