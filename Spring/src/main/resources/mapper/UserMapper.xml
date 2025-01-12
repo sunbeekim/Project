@@ -40,7 +40,7 @@
         )
     </select>
     
-    <select id="checkUser" parameterType="com.example.demo.model.UserRequest" resultType="boolean">
+    <select id="checkUser" parameterType="com.example.demo.dto.UserRequest" resultType="boolean">
         SELECT EXISTS(
            SELECT 1
            FROM users_login 
