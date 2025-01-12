@@ -18,7 +18,7 @@ const Login = () => {
       
       const response = await fetch('/api/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'applicatioin/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData),
       });
 
@@ -38,13 +38,10 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     fetchLogin();
-    alert("Login Click!");
+   
   };
 
-  //vi? 프로젝트 위치로 가주세요
-  // 깃 명령어에 marge 하신건가요?
-  // 되는데요?ㅋㅋㅋㅋㄴ뭐아아zzzz good
-  // 아마도 
+
   //  git fetch --all 이 명령어는 원격저장소의 브랜치를 찾아서 내 로컬 깃에도 저장하는 느낌
   // 딱 한번만 하면 됩니다 원격저장소에 브랜치가 추가 되거나 삭제되지 않는 이상.
   // 히스토리 보니까 깃 푸쉬 성공했는데 안된거 같아서 pull 하니까
