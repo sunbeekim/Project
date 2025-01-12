@@ -39,5 +39,13 @@
             WHERE email = #{email}
         )
     </select>
+    
+    <select id="checkUser" parameterType="com.example.demo.model.UserRequest" resultType="boolean">
+        SELECT EXISTS(
+           SELECT 1
+           FROM users_login 
+           WHERE userId = #{userId} AND password =#{password}
+        ) 
+    </select>
 
 </mapper>

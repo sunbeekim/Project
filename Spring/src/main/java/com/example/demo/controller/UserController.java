@@ -29,4 +29,18 @@ public class UserController {
     userService.createUser(userRequest);
     return ResponseEntity.ok("User created successfully");
   }
+  
+  //로그인 검증
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UserRequest userRequest) {
+    	//UserService의 validateLogin 메서드를 호출하여 입력된 아이디와 비밀번호가 유효한지 확인
+    	boolean isValid = userService.validateLogin(userRequest.getUserId(), userRequest.getPassword());
+
+        if (isValid) {
+            return ResponseEntity.ok("로그인 성공!");
+        } else {
+            return ResponseEntity.status(401).body("아이디나 비밀번호가 잘못되었습니다.");
+        }
+   
+  }
 }
