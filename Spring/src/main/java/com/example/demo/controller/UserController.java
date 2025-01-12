@@ -1,8 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.UserRequest;
 import com.example.demo.model.User;
-import com.example.demo.model.UserData;
+
 import com.example.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,5 +29,17 @@ public class UserController {
     // UserService에서 User와 UserData를 처리하도록 위임
     userService.createUser(userRequest);
     return ResponseEntity.ok("User created successfully");
+  }
+
+  // 로그인
+  @PostMapping("/login")
+  public ResponseEntity<String> login(@RequestBody LoginRequest login) {
+    boolean isValid = userService.validUser(login);
+
+    if (isValid) {
+      return ResponseEntity.ok("Login successful");
+    } else {
+      return ResponseEntity.status(401).body("Login failed");
+    }
   }
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const springAPI = 'http://localhost:8080/api';
+const springAPI = 'http://localhost:8080/api/users';
 
 export const LoginAPI = async (formData) => {
   try {

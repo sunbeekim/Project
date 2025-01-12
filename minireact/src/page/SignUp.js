@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -86,6 +85,7 @@ const SignUp = () => {
             value={formData.userId}
             onChange={handleChange}
           />
+          <button>중복확인</button>
           {errors.userId && <small className="error-msg">{errors.userId}</small>}
         </div>
 
