@@ -21,7 +21,7 @@ public class UserService {//sqlSession 객체를 사용해 쿼리를 실행,MyBa
 	}
 
 	public boolean validateLogin(String userId, String password) {
-		User user = sqlSession.selectOne("com.example.demo.mapper.UserMapper.findByUserId\", userId");
+		User user = sqlSession.selectOne("com.example.demo.mapper.UserMapper.findByUserId", userId);
 
 		// 사용자 정보가 존재하고, 비밀번호가 일치하는지 확인
 		if (user != null && user.getPassword().equals(password)) {
