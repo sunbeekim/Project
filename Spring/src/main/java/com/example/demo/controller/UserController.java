@@ -17,10 +17,17 @@ public class UserController {
     this.userService = userService;
   }
 
-  // ID로 사용자 조회
-  @GetMapping("/{id}")
-  public User getUserById(@PathVariable Long id) {
-    return userService.findById(id);
+  // USER ID로 사용자 조회
+  @GetMapping("/check/{userId}")
+  public ResponseEntity<String> getUserByUserId(@PathVariable String userId) {
+    System.out.println("아이디 확인: " + userId);
+    boolean userExists = userService.findByUserId(userId);
+
+    if (userExists) {
+      return ResponseEntity.status(409).body("이미 존재하는 아이디입니다.");
+    } else {
+      return ResponseEntity.ok("사용 가능한 아이디입니다.");
+    }
   }
 
   // 회원가입

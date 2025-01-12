@@ -17,8 +17,15 @@ public class UserService {
     this.sqlSession = sqlSession;
   }
 
-  public User findById(Long id) {
-    return sqlSession.selectOne("com.example.demo.mapper.UserMapper.findById", id);
+  public boolean findByUserId(String userId) {
+    try {
+      User user = sqlSession.selectOne("com.example.demo.mapper.UserMapper.findByUserId", userId);
+      return user != null;
+    } catch (Exception e) {
+      // 예외 로그 출력
+      System.out.println("Error while finding user by ID: {}" + userId + e);
+      throw new RuntimeException("Internal Server Error occurred");
+    }
   }
 
   public void createUser(UserRequest userRequest) {

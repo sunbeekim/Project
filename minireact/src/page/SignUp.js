@@ -1,7 +1,7 @@
 // minireact/src/page/SignUp.js
 
-import axios from 'axios';
 import React, { useState } from 'react';
+import { IdCheckAPI, SingupAPI } from '../api/UserAPI';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +13,7 @@ const SignUp = () => {
     phoneNumber: ''
   });
   const [errors, setErrors] = useState({});
+  const [userIdCheck, setUserIdCheck] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -21,12 +22,28 @@ const SignUp = () => {
 
   const fetchSignUp = async () => {
     try {
-      const response = await axios.post('/api/users/signup', formData);
+      const response = await SingupAPI(formData);
       console.log('서버 응답:', response.data);
       alert('회원가입이 완료되었습니다!');
     } catch (error) {
       console.error('Error during sign-up:', error.response?.data || error.message);
       alert('회원가입 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleCheck = async () => {
+    if (formData.userId.trim() === '') {
+      alert('ID를 입력해주세요.');
+      return; // userId가 비어 있으면 중단
+    }
+    try {
+      const message = await IdCheckAPI(formData.userId); // API 호출
+      alert(message.data); // 서버 응답 메시지를 표시
+      setUserIdCheck(true);
+    } catch (error) {
+      console.error('ID CHECK', error);
+      alert(`이미 존재하는 아이디 입니다.`); // 에러 메시지 표시
+      setUserIdCheck(false);
     }
   };
 
@@ -37,6 +54,9 @@ const SignUp = () => {
     // ID 검사
     if (formData.userId.trim() === '') {
       newErrors.userId = 'ID를 입력해주세요.';
+    }
+    if (userIdCheck === true && formData.userId.trim() !== '') {
+      newErrors.userId = '중복확인을 해주세요.';
     }
 
     // 이름 검사
@@ -85,7 +105,7 @@ const SignUp = () => {
             value={formData.userId}
             onChange={handleChange}
           />
-          <button>중복확인</button>
+          <button onClick={handleCheck}>중복확인</button>
           {errors.userId && <small className="error-msg">{errors.userId}</small>}
         </div>
 
