@@ -62,12 +62,12 @@ const Login = () => {
 
      <div>
       <label htmlfor="username">아이디</label>
-        <input type="text" name="username" id="username" value={"id"} placeholder="아이디를 입력하세요" ></input>
+        <input type="text" name="username" id="username" value={"username"} placeholder="아이디를 입력하세요" ></input>
       </div>
     
     <div>
       <label htmlfor="userpassword">비밀번호</label>
-        <input type="password" name="password" id="password" value={"password"}placeholder="비밀번호호를 입력하세요" ></input>
+        <input type="password" name="password" id="password" value={"userpassword"}placeholder="비밀번호호를 입력하세요" ></input>
     
         </div>
 
