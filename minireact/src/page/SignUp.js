@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { IdCheckAPI, SingupAPI } from '../api/UserAPI';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -92,84 +93,119 @@ const SignUp = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h2>회원가입</h2>
+    <div className="container mt-5">
+      <form className="p-4 border rounded bg-light" onSubmit={handleSubmit}>
+        <h2 className="text-center mb-4">회원가입</h2>
 
-        <div>
-          <label htmlFor="userId">ID</label>
-          <input
-            type="text"
-            id="userId"
-            placeholder="ID를 입력하세요"
-            value={formData.userId}
-            onChange={handleChange}
-          />
-          <button onClick={handleCheck}>중복확인</button>
-          {errors.userId && <small className="error-msg">{errors.userId}</small>}
+        {/* ID 입력 */}
+        <div className="mb-3">
+          <label htmlFor="userId" className="form-label">
+            ID
+          </label>
+          <div className="input-group">
+            <input
+              type="text"
+              id="userId"
+              className="form-control"
+              placeholder="ID를 입력하세요"
+              value={formData.userId}
+              onChange={handleChange}
+            />
+            <button type="button" className="btn btn-outline-secondary" onClick={handleCheck}>
+              중복확인
+            </button>
+          </div>
+          {errors.userId && <small className="text-danger">{errors.userId}</small>}
         </div>
 
-        <div>
-          <label htmlFor="password">비밀번호</label>
+        {/* 비밀번호 입력 */}
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            비밀번호
+          </label>
           <input
             type="password"
             id="password"
+            className="form-control"
             placeholder="비밀번호를 입력하세요"
             value={formData.password}
             onChange={handleChange}
           />
-          {errors.password && <small className="error-msg">{errors.password}</small>}
+          {errors.password && <small className="text-danger">{errors.password}</small>}
         </div>
 
-        <div>
-          <label htmlFor="confirmPassword">비밀번호 확인</label>
+        {/* 비밀번호 확인 */}
+        <div className="mb-3">
+          <label htmlFor="confirmPassword" className="form-label">
+            비밀번호 확인
+          </label>
           <input
             type="password"
             id="confirmPassword"
+            className="form-control"
             placeholder="비밀번호를 다시 입력하세요"
             value={formData.confirmPassword}
             onChange={handleChange}
           />
-          {errors.confirmPassword && <small>{errors.confirmPassword}</small>}
+          {errors.confirmPassword && (
+            <small className="text-danger">{errors.confirmPassword}</small>
+          )}
         </div>
 
-        <div>
-          <label htmlFor="forename">이름</label>
+        {/* 이름 입력 */}
+        <div className="mb-3">
+          <label htmlFor="forename" className="form-label">
+            이름
+          </label>
           <input
             type="text"
             id="forename"
+            className="form-control"
             placeholder="이름을 입력하세요"
             value={formData.forename}
             onChange={handleChange}
           />
-          {errors.forename && <small className="error-msg">{errors.forename}</small>}
+          {errors.forename && <small className="text-danger">{errors.forename}</small>}
         </div>
 
-        <div>
-          <label htmlFor="phoneNumber">전화번호</label>
+        {/* 전화번호 입력 */}
+        <div className="mb-3">
+          <label htmlFor="phoneNumber" className="form-label">
+            전화번호
+          </label>
           <input
             type="text"
             id="phoneNumber"
+            className="form-control"
             placeholder="- 없이 전화번호를 입력"
             value={formData.phoneNumber}
             onChange={handleChange}
           />
-          {errors.phoneNumber && <small className="error-msg">{errors.phoneNumber}</small>}
+          {errors.phoneNumber && <small className="text-danger">{errors.phoneNumber}</small>}
         </div>
 
-        <div>
-          <label htmlFor="email">이메일</label>
+        {/* 이메일 입력 */}
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            이메일
+          </label>
           <input
             type="email"
             id="email"
+            className="form-control"
             placeholder="이메일을 입력하세요"
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <small className="error-msg">{errors.email}</small>}
+          {errors.email && <small className="text-danger">{errors.email}</small>}
         </div>
 
-        <button type="submit">회원가입</button>
+        {/* 회원가입 버튼 */}
+        <div className="text-center">
+          <button type="submit" className="btn btn-primary w-100">
+            회원가입
+          </button>
+        </div>
       </form>
     </div>
   );
