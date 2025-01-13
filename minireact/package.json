@@ -2,7 +2,7 @@
   "name": "minireact",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://http://183.105.171.41/:8080",
+  "proxy": "http://183.105.171.41:8080",
   "dependencies": {
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
