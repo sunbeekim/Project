@@ -38,22 +38,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     fetchLogin();
-   
   };
-
-
-  //  git fetch --all 이 명령어는 원격저장소의 브랜치를 찾아서 내 로컬 깃에도 저장하는 느낌
-  // 딱 한번만 하면 됩니다 원격저장소에 브랜치가 추가 되거나 삭제되지 않는 이상.
-  // 히스토리 보니까 깃 푸쉬 성공했는데 안된거 같아서 pull 하니까
-  // vi편집기로 이동돼서 그랬던거 같아요
-  
-  // git reset --hard origin/feature_1 가장 최근 작업으로 복구
-  
-  // git add . 변경사항 업로드 준비
-  // git status 변경사항 보기
-  // git commit -m "작업내용" 변경사항 임시저장
-  // git push origin feature_1 변경사항 원격저장소로 업로드
- 
   
   return (
     <div>
