@@ -10,16 +10,17 @@ const API_URL = 'http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/sea
 const API_KEY = 'KZF0O6JP09Q6O216R86W';
 
 // 영화 데이터 fetch 함수
-export const fetchMoviesByDirector = async (nation) => {
+export const fetchMoviesByDirector = async (nation, startYear, endYear) => {
   try {
     const response = await externalAPI.get(API_URL, {
       params: {
         ServiceKey: API_KEY,
         listCount: 500,
         nation: nation,
-        startCount: 0, 
-        keyword: "",   
-        sort:'prodYear,1',
+        startCount: 0,
+        createDts: startYear || '',
+        createDte: endYear || '',
+        sort: 'prodYear,1',
         collection: 'kmdb_new2',
         detail: 'Y'
       }

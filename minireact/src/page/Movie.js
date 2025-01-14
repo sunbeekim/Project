@@ -5,14 +5,17 @@ import { fetchMoviesByDirector } from '../api/ExternalAPI';
 const Movie = () => {
   const [movies, setMovies] = useState([]);
   const [name, setName] = useState('');
+  const [startYear, setStartYear] = useState('');
+  const [endYear, setEndYear] = useState('');
   const [genreData, setGenreData] = useState([]);
   const [keywordData, setKeywordData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchMovies = async () => {
     try {
-      const fetchedMovies = await fetchMoviesByDirector(name);
+      const fetchedMovies = await fetchMoviesByDirector(name, startYear, endYear);
       setMovies(fetchedMovies);
+      console.log("영화 데이터:", fetchedMovies);
     } catch (err) {
       console.error('Error in Movie component:', err);
     }
@@ -37,9 +40,9 @@ const Movie = () => {
       // 키워드 데이터 처리
     const keywordCount = {};
     movies.forEach(movie => {
-      console.log("개별 영화의 키워드:", movie.keywords); // 각 영화의 키워드 확인
+      
       const keywords = movie.keywords?.split(',') || [];
-      console.log("분리된 키워드:", keywords); // 분리된 키워드 배열 확인
+      
       
       keywords.forEach(keyword => {
         const trimmedKeyword = keyword.trim();
@@ -113,17 +116,49 @@ const Movie = () => {
   // 컴포넌트 UI 렌더링
   return (
     <div>
-      <span>
-        <label>국가이름</label>
-        <input 
-          type="text" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button onClick={fetchMovies}>
-          검색
-        </button>
-      </span>
+      <div className="search-container" style={{ marginBottom: '20px' }}>
+        <div className="search-item">
+          <label>국가이름: </label>
+          <input 
+            type="text" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="search-item">
+          <label>시작 연도: </label>
+          <input 
+            type="number" 
+            value={startYear}
+            min="1900"
+            max={new Date().getFullYear()}
+            onChange={(e) => setStartYear(e.target.value)}
+          />
+        </div>
+        <div className="search-item">
+          <label>종료 연도: </label>
+          <input 
+            type="number" 
+            value={endYear}
+            min="1900"
+            max={new Date().getFullYear()}
+            onChange={(e) => setEndYear(e.target.value)}
+          />
+        </div>
+        <button onClick={fetchMovies}>검색</button>
+      </div>
+
+      {movies.length > 0 && (
+        <div style={{ 
+          marginBottom: '20px', 
+          fontSize: '1.1em',
+          padding: '10px',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '5px'
+        }}>
+          <strong>검색된 영화 수:</strong> {movies.length}편
+        </div>
+      )}
 
       {genreData.length > 1 && (
         <div>
@@ -196,7 +231,7 @@ const Movie = () => {
           },
           sizeAxis: {
             minSize: 10,
-            maxSize: 40
+            maxSize: 20
           },
           legend: { position: 'none' }
         }}
