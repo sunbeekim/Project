@@ -1,10 +1,29 @@
 // minireact/src/page/Board.js
 import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from "axios";
 
 const Board = () => {
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
+
+   //게시글 목록을 서버에서 가져오는 함수
+   useEffect(() => {//화면이 처음 나타날 때 한 번 실행
+    async function fetchPosts() {
+       try {
+         const response = await axios.get('/api/posts');
+         //axios.get으로 서버에 요청보내고 게시글 목록 가져옴
+         setPosts(response.data);
+         //서버에서 받은 데이터를 (posts)상태에 저장
+       } catch (error) {
+         console.error('게시글 목록 조회 중 오류 발생:', error);
+         alert('게시글 목록을 가져오는 데 오류가 발생했습니다.');
+       }
+     }
+     fetchPosts();
+   }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 실행되도록 설정
+  
+  
 
    // 삭제할 게시글을 요청하는 함수
    const deletePost = async (postId) => {
