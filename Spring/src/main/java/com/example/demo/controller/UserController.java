@@ -55,7 +55,9 @@ public class UserController {
     boolean isValid = userService.validUser(login);
 
     if (isValid) {
+      String forename = userService.getForenameByUserId(login.getUserId());
       session.setAttribute("userId", login.getUserId());
+      session.setAttribute("forename", forename);
       return ResponseEntity.ok("Login successful");
     } else {
       return ResponseEntity.status(401).body("Login failed");
@@ -73,11 +75,13 @@ public class UserController {
   @GetMapping("/check-session")
   public ResponseEntity<Map<String, Object>> checkSession(HttpSession session) {
     String userId = (String) session.getAttribute("userId");
+    String forename = (String) session.getAttribute("forename");
     System.out.println("유저아이디 어트리뷰트에서 확인" + userId);
     Map<String, Object> response = new HashMap<>();
     if (userId != null) {
       response.put("loggedIn", true);
       response.put("userId", userId);
+      response.put("forename", forename);
       System.out.println("세션 검증 성공");
       return ResponseEntity.ok(response);
     } else {

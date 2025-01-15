@@ -49,6 +49,10 @@ public class UserService {
     }
   }
 
+  public String getForenameByUserId(String userId) {
+    return sqlSession.selectOne("com.example.demo.mapper.UserMapper.findForenameByUserId", userId);
+  }
+
   public boolean validUser(LoginRequest login) {
     // MyBatis를 이용해 userId로 사용자 정보 조회
     User user = sqlSession.selectOne(
