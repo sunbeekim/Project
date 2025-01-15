@@ -116,36 +116,41 @@ const Movie = () => {
   // 컴포넌트 UI 렌더링
   return (
     <div>
-      <div className="search-container" style={{ marginBottom: '20px' }}>
-        <div className="search-item">
-          <label>국가이름: </label>
+      <div className="search-container">
+        <div className="form-group">
+          <label>국가이름:</label>
           <input 
             type="text" 
+            className="form-control"
             value={name} 
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="search-item">
-          <label>시작 연도: </label>
+        <div className="form-group">
+          <label>시작 연도:</label>
           <input 
-            type="number" 
+            type="number"
+            className="form-control"
             value={startYear}
             min="1900"
             max={new Date().getFullYear()}
             onChange={(e) => setStartYear(e.target.value)}
           />
         </div>
-        <div className="search-item">
-          <label>종료 연도: </label>
+        <div className="form-group">
+          <label>종료 연도:</label>
           <input 
-            type="number" 
+            type="number"
+            className="form-control"
             value={endYear}
             min="1900"
             max={new Date().getFullYear()}
             onChange={(e) => setEndYear(e.target.value)}
           />
         </div>
-        <button onClick={fetchMovies}>검색</button>
+        <button className="btn btn-primary mt-3" onClick={fetchMovies}>
+          검색
+        </button>
       </div>
 
       {movies.length > 0 && (
