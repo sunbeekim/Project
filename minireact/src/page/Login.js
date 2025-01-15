@@ -27,7 +27,7 @@ const Login = () => {
 
       const data = await response.json(); 
 
-      if (data.success) {
+      if (data && data.success) {
         alert('로그인 성공!'); // 성공 메시지 알림창 표시
       } else {
         alert('아이디 또는 비밀번호가 잘못되었습니다.'); // 실패 메시지 알림창 표시
