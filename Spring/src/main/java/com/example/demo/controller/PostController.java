@@ -43,7 +43,7 @@ public class PostController {
 				return ResponseEntity.notFound().build();//게시글을 찾을 수 없을 때
 			}
 		}catch(Exception e){
-			return ResponseEntity.badRequest().body("게시글 삭제 실패: " + e.getMessage());
+			return ResponseEntity.badRequest().body("게시글 조회 실패: " + e.getMessage());
 
 		}
 		
