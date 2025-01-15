@@ -8,4 +8,5 @@
         VALUES (#{postId}, #{title}, #{content}, #{forename})
     </insert>
     
+    
 </mapper>

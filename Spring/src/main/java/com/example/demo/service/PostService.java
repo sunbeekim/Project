@@ -19,4 +19,16 @@ public class PostService {
             throw e;
         }
     }
+    
+    public void updatePost(Post post) {
+        try {
+            int updatedRows = sqlSession.update("com.example.demo.mapper.PostMapper.updatePost", post);
+            if (updatedRows == 0) {
+                throw new RuntimeException("게시글이 존재하지 않거나 수정 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error in updatePost: " + e.getMessage());
+            throw e;
+        }
+    }
 }
