@@ -101,7 +101,7 @@ const Board = () => {
         </div>
         <div className="col text-end">
               <Link to="/board-writing">
-                <button className="btn btn-sm btn-light fw-semibold text-secondary">
+                <button className="btn btn-mid btn-light btn-outline-secondary fw-semibold text-secondary">
                   <i className="fas fa-pen me-1"></i>글쓰기
                 </button>
               </Link>

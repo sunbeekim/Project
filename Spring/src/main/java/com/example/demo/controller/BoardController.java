@@ -7,7 +7,9 @@ import com.example.demo.model.Board;
 import com.example.demo.service.BoardService;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/board")
 public class BoardController {
@@ -39,6 +41,7 @@ public class BoardController {
   // 새로운 게시물 추가
   @PostMapping("/add")
   public ResponseEntity<String> createBoard(@RequestBody Board board) {
+    log.info("Received board data: {}", board);
     boardService.insertBoard(board);
     return ResponseEntity.ok("게시물이 성공적으로 추가되었습니다.");
   }

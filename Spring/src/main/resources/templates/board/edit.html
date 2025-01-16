@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>게시글 수정</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+    <nav th:replace="fragments/header :: nav"></nav>
+
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h3 class="mb-0">게시글 수정</h3>
+            </div>
+            <div class="card-body">
+                <form id="editForm">
+                    <div class="mb-3">
+                        <label class="form-label">제목</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">내용</label>
+                        <textarea class="form-control" name="content" rows="10" required></textarea>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/board/list}'|">
+                            <i class="bi bi-x-circle me-1"></i>취소
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>수정
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            const id = new URLSearchParams(window.location.search).get('id');
+            const currentUser = /*[[${session.userId}]]*/ null;
+
+            if (!id) {
+                alert('잘못된 접근입니다.');
+                location.href = '/board/list';
+                return;
+            }
+
+            // 게시글 조회
+            BoardAPI.getBoardById(id)
+                .then(function(board) {
+                    // 작성자 체크
+                    if (!currentUser || currentUser !== board.boardId) {
+                        alert('수정 권한이 없습니다.');
+                        location.href = '/board/read?id=' + id;
+                        return;
+                    }
+
+                    // 폼에 데이터 설정
+                    $('input[name="title"]').val(board.title);
+                    $('textarea[name="content"]').val(board.content);
+                })
+                .catch(function(error) {
+                    console.error('게시글 조회 실패:', error);
+                    alert('게시글을 불러오는데 실패했습니다.');
+                    location.href = '/board/list';
+                });
+
+            // 폼 제출
+            $('#editForm').on('submit', function(e) {
+                e.preventDefault();
+
+                const formData = {
+                    id: id,
+                    title: $('input[name="title"]').val().trim(),
+                    content: $('textarea[name="content"]').val().trim(),
+                    boardId: currentUser
+                };
+
+                if (!formData.title) {
+                    alert('제목을 입력해주세요.');
+                    return;
+                }
+
+                if (!formData.content) {
+                    alert('내용을 입력해주세요.');
+                    return;
+                }
+
+                BoardAPI.updateBoard(id, formData)
+                    .then(function() {
+                        alert('게시글이 수정되었습니다.');
+                        location.href = '/board/read?id=' + id;
+                    })
+                    .catch(function(error) {
+                        console.error('게시글 수정 실패:', error);
+                        alert('게시글 수정에 실패했습니다.');
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

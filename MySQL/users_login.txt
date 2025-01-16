@@ -1,7 +1,7 @@
 id	int(11)	NO	PRI		auto_increment
 userId	varchar(255)	NO	UNI		
 password	varchar(255)	NO			
-createdAt	timestamp	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+created_at	timestamp	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
 
 
 users_login	CREATE TABLE `users_login` (

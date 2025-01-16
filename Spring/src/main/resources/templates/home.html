@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Movie App</title>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+    <nav th:replace="fragments/header :: nav"></nav>
+
+    <div class="container py-5">
+        <!-- 프로젝트 소개 -->
+        <section class="mb-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="display-4 mb-4">Movie App Project</h2>
+                    <p class="lead text-muted mb-4">
+                        영화 정보 검색과 커뮤니티 기능을 제공하는 웹 애플리케이션입니다.
+                        한국영화데이터베이스(KMDB) Open API를 활용하여 영화 정보를 제공하고,
+                        사용자들과 소통할 수 있는 게시판 기능을 구현했습니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 주요 기능 소개 -->
+        <section class="mb-5">
+            <h3 class="text-center mb-4">주요 기능</h3>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <i class="bi bi-search display-6 text-primary"></i>
+                            </div>
+                            <h4 class="h5 text-center mb-3">영화 검색</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-check2 text-success me-2"></i>제목, 감독, 배우 검색
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 아키텍처 -->
+        <section class="mb-5">
+            <h3 class="text-center mb-4">아키텍처</h3>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <ul class="list-unstyled text-center">
+                        <li class="mb-2">Frontend: SPA 아키텍처 (React)</li>
+                        <li class="mb-2">Backend: 계층형 아키텍처 (Controller-Service-Repository)</li>
+                        <li class="mb-2">Database: MySQL (게시판, 회원정보)</li>
+                        <li class="mb-2">External API: KMDB Open API (영화 정보)</li>
+                        <li class="mb-2">상태 관리: Context Custom Hook + SessionCheck API</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
