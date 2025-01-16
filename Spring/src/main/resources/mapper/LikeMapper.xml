@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.LikeMapper">
+
+    <!-- 특정 게시글에 대해 사용자가 좋아요를 눌렀는지 확인 -->
+    <select id="isLiked" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM likes
+        WHERE post_id = #{postId}
+          AND user_id = #{userId}
+    </select>
+
+    <!-- 특정 게시글에 좋아요 추가 -->
+    <insert id="addLike">
+        INSERT INTO likes (post_id, user_id)
+        VALUES (#{postId}, #{userId})
+    </insert>
+   
+    <!-- 특정 게시글에 좋아요 취소 -->
+    <delete id="removeLike">
+        DELETE FROM likes
+        WHERE post_id = #{postId}
+          AND user_id = #{userId}
+    </delete>
+
+    <!-- 특정 게시글의 좋아요 수 조회 -->
+    <select id="countLikes" resultType="int">
+        SELECT COUNT(*)
+        FROM likes
+        WHERE post_id = #{postId}
+    </select>
+
+</mapper>

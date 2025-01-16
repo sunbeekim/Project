@@ -39,4 +39,11 @@
         )
     </select>
 
+    <!-- userId로 forename 조회 -->
+    <select id="findForenameByUserId" parameterType="string" resultType="string">
+        SELECT forename
+        FROM users_data
+        WHERE id = (SELECT id FROM users_login WHERE userId = #{userId})
+    </select>
+
 </mapper>

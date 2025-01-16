@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.BoardMapper">
+
+  <!-- 모든 게시물 조회 -->
+  <select id="findAll" resultType="com.example.demo.model.Board">
+    SELECT id, boardId, title, content, forename, createAt, views
+    FROM board
+  </select>
+
+  <!-- ID로 게시물 조회 -->
+  <select id="findById" parameterType="long" resultType="com.example.demo.model.Board">
+    SELECT id, boardId, title, content, forename, createAt, views
+    FROM board
+    WHERE id = #{id}
+  </select>
+
+  <!-- 게시물 추가 -->
+  <insert id="insertBoard" parameterType="com.example.demo.model.Board" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO board (boardId, title, content, forename)
+    VALUES (#{boardId}, #{title}, #{content}, #{forename})
+  </insert>
+
+  <!-- 게시물 수정 -->
+  <update id="updateBoard" parameterType="com.example.demo.model.Board">
+    UPDATE board
+    SET 
+      title = #{title}, 
+      content = #{content}, 
+      forename = #{forename}, 
+      views = #{views}
+    WHERE id = #{id}
+  </update>
+
+  <!-- 게시물 삭제 -->
+  <delete id="deleteBoard" parameterType="long">
+    DELETE FROM board WHERE id = #{id}
+  </delete>
+
+</mapper>

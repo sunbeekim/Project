@@ -3,7 +3,7 @@ import { LoginAPI } from '../api/UserAPI';
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Login = ({ setIsLoggedIn, setUserId }) => {
+const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userId: '',
@@ -29,10 +29,9 @@ const Login = ({ setIsLoggedIn, setUserId }) => {
 
     try {
       const response = await LoginAPI(formData);
-      console.log(response.data);
-      alert('로그인 성공!');
-      setIsLoggedIn(true);
-      setUserId(formData.userId);
+      console.log("response.data", response.data);
+      alert('로그인 성공!');     
+        
       navigate('/');
     } catch (err) {
       console.error(err);
