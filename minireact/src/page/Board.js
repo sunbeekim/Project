@@ -1,13 +1,18 @@
 // minireact/src/page/Board.js
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { fetchAllBoards } from '../api/BoardAPI';
+import AddComment from './AddComment';
+import CommentList from './CommentList';
 
 const Board = () => {
   const [boards, setBoards] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredBoards, setFilteredBoards] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const boardId = queryParams.get('id');
 
   const loadBoards = async () => {
     try {
@@ -24,7 +29,7 @@ const Board = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = boards.filter(board => 
+    const filtered = boards.filter(board =>
       board.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredBoards(filtered);
@@ -38,7 +43,6 @@ const Board = () => {
             <div className="col">
               <h2 className="mb-0">Board</h2>
             </div>
-            
           </div>
           <div className="row">
             <div className="col-md-6">
@@ -75,8 +79,8 @@ const Board = () => {
               <tbody>
                 {filteredBoards.length > 0 ? (
                   filteredBoards.map((board) => (
-                    <tr 
-                      key={board.id} 
+                    <tr
+                      key={board.id}
                       onClick={() => navigate(`/board-read?id=${board.id}`)}
                       style={{ cursor: 'pointer' }}
                       className="align-middle"
@@ -99,13 +103,22 @@ const Board = () => {
             </table>
           </div>
         </div>
+
+        {/* 댓글 추가 및 조회 */}
+        {boardId && (
+          <div className="card-body">
+            <AddComment boardId={boardId} />
+            <CommentList boardId={boardId} />
+          </div>
+        )}
+
         <div className="col text-end">
-              <Link to="/board-writing">
-                <button className="btn btn-sm btn-light fw-semibold text-secondary">
-                  <i className="fas fa-pen me-1"></i>글쓰기
-                </button>
-              </Link>
-            </div>
+          <Link to="/board-writing">
+            <button className="btn btn-sm btn-light fw-semibold text-secondary">
+              <i className="fas fa-pen me-1"></i>글쓰기
+            </button>
+          </Link>
+        </div>
       </div>      
     </div>
   );

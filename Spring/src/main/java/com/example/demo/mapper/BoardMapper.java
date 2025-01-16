@@ -23,4 +23,5 @@ public interface BoardMapper {
 
   // 게시물 삭제
   void deleteBoard(@Param("id") Long id);
+  
 }

@@ -1,0 +1,20 @@
+<mapper namespace="com.example.mapper.CommentMapper">
+
+    <!-- 댓글 조회 -->
+    <select id="selectComment" resultType="Comment">
+        SELECT * FROM comments WHERE comment_id = #{commentId}
+    </select>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="Comment">
+        UPDATE comments
+        SET content = #{content}, updated_at = NOW()
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM comments WHERE comment_id = #{commentId}
+    </delete>
+
+</mapper>

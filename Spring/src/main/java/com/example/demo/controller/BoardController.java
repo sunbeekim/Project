@@ -1,12 +1,21 @@
 package com.example.demo.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.dto.CommentDTO;
 import com.example.demo.model.Board;
 import com.example.demo.service.BoardService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/board")
@@ -77,4 +86,22 @@ public class BoardController {
       return ResponseEntity.notFound().build();
     }
   }
+  // 댓글 추가
+  @PostMapping("/{boardId}/comments")
+  public ResponseEntity<String> addComment(@PathVariable int boardId, @RequestBody CommentDTO commentDTO) {
+      try {
+          boardService.addCommentToBoard(boardId, commentDTO);
+          return new ResponseEntity<>("댓글이 추가되었습니다.", HttpStatus.CREATED);
+      } catch (Exception e) {
+          return new ResponseEntity<>("댓글 추가 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+  }
+  
+  // 게시글에 대한 댓글 조회
+  @GetMapping("/{boardId}/comments")
+  public ResponseEntity<List<CommentDTO>> getComments(@PathVariable int boardId) {
+      List<CommentDTO> comments = boardService.getCommentsByBoard(boardId);
+      return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
+  
 }

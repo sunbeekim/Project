@@ -38,5 +38,16 @@
   <delete id="deleteBoard" parameterType="long">
     DELETE FROM board WHERE id = #{id}
   </delete>
+  
+   <!-- 게시글에 댓글 추가 -->
+    <insert id="insertComment" parameterType="Comment">
+        INSERT INTO comments (board_id, content, created_at)
+        VALUES (#{boardId}, #{content}, NOW())
+    </insert>
 
+  <!-- 게시글에 달린 댓글 조회 -->
+    <select id="selectCommentsByBoard" resultType="Comment">
+        SELECT * FROM comments WHERE board_id = #{boardId}
+    </select>
+    
 </mapper>
