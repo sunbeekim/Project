@@ -36,7 +36,6 @@ const Board = () => {
     .catch(error => console.error('Error:', error));
 }
 
-
   useEffect(() => {
     loadBoards();
   }, []);
@@ -107,8 +106,7 @@ const Board = () => {
                       <td className="text-center">
                       <button  onClick={() => likePost(board.id)} className="btn btn-sm ">
                       ❤️좋아요</button>
-<span id={"like-count-${board.id}"}>{board.likeCount}</span>
- 
+                      <span id={"like-count-${board.id}"}>{board.likeCount}</span>
                       </td>
                     </tr>
                   ))
