@@ -11,7 +11,7 @@
         <!-- 검색 폼 -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">영화 검색</h3>
+                <h3 class="mb-0">영화 검색 [최신순 정렬 | 최대 500편]</h3>
             </div>
             <div class="card-body">
                 <div class="row g-3">
@@ -60,6 +60,48 @@
             </div>
         </div>
 
+        <!-- 차트 컨테이너 -->
+        <div id="chartContainer" style="display: none;">
+            <!-- 장르 분포 차트 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">장르 분포</h4>
+                </div>
+                <div class="card-body">
+                    <div id="genreChart" style="height: 400px;"></div>
+                </div>
+            </div>
+
+            <!-- 배우 출연 현황 차트 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">주요 배우 출연 현황</h4>
+                </div>
+                <div class="card-body">
+                    <div id="actorChart" style="height: 400px;"></div>
+                </div>
+            </div>
+
+            <!-- 감독별 작품 수 차트 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">감독별 작품 수</h4>
+                </div>
+                <div class="card-body">
+                    <div id="directorChart" style="height: 400px;"></div>
+                </div>
+            </div>
+
+            <!-- 상영시간 분포 차트 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">상영시간 분포</h4>
+                </div>
+                <div class="card-body">
+                    <div id="runtimeChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
         
 
         <!-- 영화 목록 -->
@@ -142,13 +184,64 @@
                 </div>
             </div>
         </div>
+
+        <!-- 채팅 인터페이스 -->
+        <div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; width: 300px; z-index: 1000;">
+            <!-- 채팅창 -->
+            <div class="chat-window card shadow" style="display: none;">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">채팅</h6>
+                    <button type="button" class="btn-close btn-close-white" onclick="toggleChat()"></button>
+                </div>
+                <div class="card-body bg-light" style="height: 300px; overflow-y: auto;" id="chatMessages">
+                    <!-- 메시지들이 여기에 동적으로 추가됨 -->
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="messageInput" placeholder="메시지를 입력하세요...">
+                        <button class="btn btn-primary" onclick="sendMessage()">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 채팅 버튼 (원형) -->
+            <div class="chat-button" onclick="toggleChat()" style="
+                width: 50px;
+                height: 50px;
+                background-color: #0d6efd;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                ">
+                <i class="bi bi-chat-dots-fill text-white fs-5"></i>
+            </div>
+        </div>
+
+        
     </div>
 
     <footer th:replace="fragments/footer :: footer"></footer>
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script th:inline="javascript">
+        // Google Charts 초기화
+        google.charts.load('current', {'packages':['corechart']});
         
-        
+        // 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            google.charts.setOnLoadCallback(() => {
+                console.log('Google Charts loaded');
+            });
+        });
+
         async function handleSearch() {
             showLoading(true);
             
@@ -183,7 +276,16 @@
                 
                 const movies = data.Data?.[0]?.Result || [];
                 displayMovies(movies);
-                console.log(movies);
+                
+                // 차트 그리기 전에 Google Charts가 로드되었는지 확인
+                if (google && google.visualization) {
+                    processChartData(movies);
+                } else {
+                    console.log('Google Charts not loaded yet, waiting...');
+                    google.charts.setOnLoadCallback(() => {
+                        processChartData(movies);
+                    });
+                }
                 
             } catch (error) {
                 console.error('영화 검색 실패:', error);
@@ -265,6 +367,271 @@
 
         function showLoading(show) {
             $('#loadingSpinner').toggle(show);
+        }
+
+        function toggleChat() {
+            const chatWindow = document.querySelector('.chat-window');
+            const chatButton = document.querySelector('.chat-button');
+            
+            if (chatWindow.style.display === 'none') {
+                chatWindow.style.display = 'block';
+                chatButton.style.display = 'none';
+            } else {
+                chatWindow.style.display = 'none';
+                chatButton.style.display = 'flex';
+            }
+        }
+
+        async function checkServerHealth() {
+            try {
+                const response = await fetch('http://183.105.171.41:8000/health');
+                const data = await response.json();
+                console.log('서버 상태:', data);
+                return data.status === 'healthy';
+            } catch (error) {
+                console.error('서버 연결 확인 실패:', error);
+                return false;
+            }
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (message) {
+                const chatMessages = document.getElementById('chatMessages');
+                
+                // 사용자 메시지 표시
+                const userMessageElement = document.createElement('div');
+                userMessageElement.className = 'mb-2 d-flex justify-content-end';
+                userMessageElement.innerHTML = `
+                    <div class="bg-primary text-white rounded p-2" style="max-width: 80%;">
+                        ${message}
+                    </div>
+                `;
+                chatMessages.appendChild(userMessageElement);
+                
+                try {
+                    // 서버 상태 확인
+                    const isServerHealthy = await checkServerHealth();
+                    if (!isServerHealthy) {
+                        throw new Error('서버가 응답하지 않습니다.');
+                    }
+
+                    console.log('API 호출 시작:', message);
+                    
+                    const response = await fetch('http://183.105.171.41:8000/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message })
+                    });
+                    
+                    console.log('API 응답 상태:', response.status);
+                    
+                    const data = await response.json();
+                    console.log('API 응답 데이터:', data);
+                    
+                    // AI 응답 표시
+                    const aiMessageElement = document.createElement('div');
+                    aiMessageElement.className = 'mb-2 d-flex justify-content-start';
+                    aiMessageElement.innerHTML = `
+                        <div class="bg-light border rounded p-2" style="max-width: 80%;">
+                            ${data.response}
+                        </div>
+                    `;
+                    chatMessages.appendChild(aiMessageElement);
+                } catch (error) {
+                    console.error('AI 응답 오류:', error);
+                    
+                    // 오류 메시지 표시
+                    const errorMessageElement = document.createElement('div');
+                    errorMessageElement.className = 'mb-2 d-flex justify-content-start';
+                    errorMessageElement.innerHTML = `
+                        <div class="bg-danger text-white rounded p-2" style="max-width: 80%;">
+                            죄송합니다. 응답을 받아오는데 실패했습니다.<br>
+                            오류: ${error.message}
+                        </div>
+                    `;
+                    chatMessages.appendChild(errorMessageElement);
+                }
+                
+                // 입력창 초기화 및 스크롤
+                messageInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Enter 키로 메시지 전송
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // 페이지 로드 시 채팅창 숨기고 버튼 표시
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatWindow = document.querySelector('.chat-window');
+            const chatButton = document.querySelector('.chat-button');
+            chatWindow.style.display = 'none';
+            chatButton.style.display = 'flex';
+        });
+
+        function processChartData(movies) {
+            // 장르 데이터 처리
+            const genreCount = {};
+            movies.forEach(movie => {
+                const genres = movie.genre?.split(',') || [];
+                genres.forEach(genre => {
+                    const trimmedGenre = genre.trim();
+                    if (trimmedGenre) {
+                        genreCount[trimmedGenre] = (genreCount[trimmedGenre] || 0) + 1;
+                    }
+                });
+            });
+
+            // 배우 출연 빈도
+            const actorCount = {};
+            movies.forEach(movie => {
+                movie.actors?.actor?.forEach(actor => {
+                    const name = actor.actorNm.trim();
+                    if (name) {
+                        actorCount[name] = (actorCount[name] || 0) + 1;
+                    }
+                });
+            });
+
+            // 감독별 작품 수
+            const directorCount = {};
+            movies.forEach(movie => {
+                movie.directors?.director?.forEach(dir => {
+                    const name = dir.directorNm;
+                    if (name) {
+                        directorCount[name] = (directorCount[name] || 0) + 1;
+                    }
+                });
+            });
+
+            // 상영시간 분포
+            const runtimeRanges = {
+                '90분 미만': 0,
+                '90-120분': 0,
+                '120-150분': 0,
+                '150분 이상': 0
+            };
+            movies.forEach(movie => {
+                const runtime = parseInt(movie.runtime);
+                if (runtime) {
+                    if (runtime < 90) runtimeRanges['90분 미만']++;
+                    else if (runtime < 120) runtimeRanges['90-120분']++;
+                    else if (runtime < 150) runtimeRanges['120-150분']++;
+                    else runtimeRanges['150분 이상']++;
+                }
+            });
+
+            // 차트 그리기
+            drawGenreChart(genreCount);
+            drawActorChart(actorCount);
+            drawDirectorChart(directorCount);
+            drawRuntimeChart(runtimeRanges);
+            
+            $('#chartContainer').show();
+        }
+
+        function drawGenreChart(genreCount) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '장르');
+            data.addColumn('number', '편수');
+            Object.entries(genreCount).forEach(([genre, count]) => {
+                data.addRow([genre, count]);
+            });
+
+            const options = {
+                title: '장르별 영화 수',
+                pieHole: 0.4,
+                backgroundColor: 'transparent',
+                colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
+                chartArea: {width: '80%', height: '80%'}
+            };
+
+            const chart = new google.visualization.PieChart(document.getElementById('genreChart'));
+            chart.draw(data, options);
+        }
+
+        function drawActorChart(actorCount) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '배우');
+            data.addColumn('number', '출연 횟수');
+            
+            Object.entries(actorCount)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10)
+                .forEach(([actor, count]) => {
+                    data.addRow([actor, count]);
+                });
+
+            const options = {
+                title: '배우별 출연 횟수 (상위 10명)',
+                backgroundColor: 'transparent',
+                hAxis: {title: '출연 횟수'},
+                vAxis: {title: '배우'},
+                pieHole: 0.4,               
+                colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
+                chartArea: {width: '80%', height: '80%'}
+            };
+
+            const chart = new google.visualization.PieChart(document.getElementById('actorChart'));
+            chart.draw(data, options);
+        }
+
+        function drawDirectorChart(directorCount) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '감독');
+            data.addColumn('number', '작품 수');
+            
+            Object.entries(directorCount)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10)
+                .forEach(([director, count]) => {
+                    data.addRow([director, count]);
+                });
+
+            const options = {
+                title: '감독별 작품 수 (상위 10명)',    
+                backgroundColor: 'transparent',          
+                hAxis: {title: '감독'},
+                vAxis: {title: '작품 수'},
+                pieHole: 0.4,               
+                colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
+                chartArea: {width: '80%', height: '80%'}
+            };
+
+            const chart = new google.visualization.PieChart(document.getElementById('directorChart'));
+            chart.draw(data, options);
+        }
+
+        function drawRuntimeChart(runtimeRanges) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '상영시간');
+            data.addColumn('number', '영화 수');
+            
+            Object.entries(runtimeRanges).forEach(([range, count]) => {
+                data.addRow([range, count]);
+            });
+
+            const options = {
+                title: '상영시간별 영화 수',
+                backgroundColor: 'transparent',
+                hAxis: {title: '상영시간 구간'},
+                vAxis: {title: '영화 수'},
+                pieHole: 0.4,              
+                colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
+                chartArea: {width: '80%', height: '80%'}
+            };
+
+            const chart = new google.visualization.PieChart(document.getElementById('runtimeChart'));
+            chart.draw(data, options);
         }
     </script>
 </body>

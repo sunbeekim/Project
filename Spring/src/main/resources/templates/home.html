@@ -7,35 +7,87 @@
     <nav th:replace="fragments/header :: nav"></nav>
 
     <div class="container py-5">
-        <!-- 프로젝트 소개 -->
+        <!-- 헤더 섹션 -->
         <section class="mb-5">
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="display-4 mb-4">Movie App Project</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h1 class="display-4 fw-bold mb-4">Movie App Project</h1>
                     <p class="lead text-muted mb-4">
                         영화 정보 검색과 커뮤니티 기능을 제공하는 웹 애플리케이션입니다.
-                        한국영화데이터베이스(KMDB) Open API를 활용하여 영화 정보를 제공하고,
-                        사용자들과 소통할 수 있는 게시판 기능을 구현했습니다.
+                        한국영화데이터베이스(KMDB)와 영화진흥위원회(KOFIC) Open API를 활용하여
+                        다양한 영화 정보와 순위를 제공합니다.
                     </p>
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        <a href="/movie/search" class="btn btn-primary btn-lg px-4 gap-3">영화 검색</a>
+                        <a href="/movie/rank" class="btn btn btn-primary btn-lg px-4 gap-3">상영 영화 순위</a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 주요 기능 소개 -->
+        <!-- 주요 기능 섹션 -->
         <section class="mb-5">
-            <h3 class="text-center mb-4">주요 기능</h3>
+            <h2 class="text-center mb-4">주요 기능</h2>
             <div class="row g-4">
                 <div class="col-md-6 col-lg-3">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <div class="text-center mb-3">
-                                <i class="bi bi-search display-6 text-primary"></i>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-search fs-4 text-primary me-2"></i>
+                                <h3 class="h5 mb-0">영화 검색</h3>
                             </div>
-                            <h4 class="h5 text-center mb-3">영화 검색</h4>
-                            <ul class="list-unstyled">
-                                <li class="mb-2">
-                                    <i class="bi bi-check2 text-success me-2"></i>제목, 감독, 배우 검색
-                                </li>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>제목, 감독, 배우 검색</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>연도별, 국가별 필터링</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>장르 분포 시각화</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>주요 배우 출연 현황</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>주요 감독 작품 수</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>주요 장르 분포</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-graph-up fs-4 text-primary me-2"></i>
+                                <h3 class="h5 mb-0">영화 순위</h3>
+                            </div>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>일간 순위</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>관람객 수 통계</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-people fs-4 text-primary me-2"></i>
+                                <h3 class="h5 mb-0">커뮤니티</h3>
+                            </div>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>게시글 CRUD</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>조회수 관리</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>사용자 권한 관리</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>반응형 UI</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-person-circle fs-4 text-primary me-2"></i>
+                                <h3 class="h5 mb-0">회원 관리</h3>
+                            </div>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>세션 기반 인증</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>회원가입/로그인</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>API 인증 검증</li>
                             </ul>
                         </div>
                     </div>
@@ -43,18 +95,66 @@
             </div>
         </section>
 
-        <!-- 아키텍처 -->
+        <!-- 기술 스택 섹션 -->
         <section class="mb-5">
-            <h3 class="text-center mb-4">아키텍처</h3>
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <ul class="list-unstyled text-center">
-                        <li class="mb-2">Frontend: SPA 아키텍처 (React)</li>
-                        <li class="mb-2">Backend: 계층형 아키텍처 (Controller-Service-Repository)</li>
-                        <li class="mb-2">Database: MySQL (게시판, 회원정보)</li>
-                        <li class="mb-2">External API: KMDB Open API (영화 정보)</li>
-                        <li class="mb-2">상태 관리: Context Custom Hook + SessionCheck API</li>
-                    </ul>
+            <h2 class="text-center mb-4">기술 스택</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-laptop fs-4 text-primary me-2"></i>
+                                <h3 class="h5 mb-0">Frontend</h3>
+                            </div>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Google Charts</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Axios</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>jQuery</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Bootstrap</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Thymeleaf</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>RESTful API</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-server fs-4 text-primary me-2"></i>
+                                <h3 class="h5 mb-0">Backend</h3>
+                            </div>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Spring Boot 3.3.7</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Spring Framework</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Spring Mybatis</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>MySQL</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>RESTful API</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 아키텍처 섹션 -->
+        <section class="mb-5">
+            <h2 class="text-center mb-4">시스템 구성</h2>
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-diagram-3 fs-4 text-primary me-2"></i>
+                                <h3 class="h5 mb-0">아키텍처</h3>
+                            </div>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Frontend: Thymeleaf 기반 템플릿 엔진</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>Backend: 계층형 아키텍처 (Controller-Service-Repository)</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>Database: MySQL (게시판, 회원정보)</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

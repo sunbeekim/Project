@@ -37,3 +37,47 @@ yarn-debug.log*
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Node.js 모듈
+node_modules/
+
+# React 빌드 및 테스트
+/build
+/dist
+/coverage
+.cache/
+.eslintcache
+.prettiercache
+
+# Spring/Java
+.gradle/
+build/
+target/
+*.jar
+*.war
+*.iml
+*.ipr
+*.iws
+.settings/
+.project
+.classpath
+
+# 환경 변수 파일
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+*.pid
+*.seed
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Exclude minireact folder
+#minireact/
+model_server/

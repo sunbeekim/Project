@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: header">
+        <meta charset="UTF-8">
+        <title>영화 순위</title>
+    </head> 
+<body class="bg-light d-flex flex-column min-vh-100">
+    <nav th:replace="fragments/header :: nav"></nav>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>일별 박스오피스</h2>
+            <button type="button" class="btn btn-primary" onclick="showChart()">
+                <i class="bi bi-bar-chart-fill me-1"></i>차트 보기
+            </button>
+        </div>
+
+        <!-- 차트 모달 -->
+        <div class="modal fade" id="chartModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">일별 박스오피스 차트</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="boxOfficeChart" style="height: 800px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div id="rankList" class="row g-4">
+                    <!-- 순위 데이터가 여기에 동적으로 로드됨 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        $(document).ready(function() {
+            loadBoxOffice();
+            google.charts.load('current', {'packages':['corechart']});
+        });
+
+        function loadBoxOffice() {
+            $('#rankList').html('<div class="text-center">박스오피스 데이터 로딩 중...</div>');
+            
+            MovieAPI.getBoxOffice()
+                .then(function(response) {
+                    const movies = response.boxOfficeResult.dailyBoxOfficeList;
+                    displayMovies(movies);
+                })
+                .catch(function(error) {
+                    console.error('박스오피스 데이터 로드 실패:', error);
+                    $('#rankList').html('<div class="text-center text-danger">데이터를 불러오는데 실패했습니다.</div>');
+                });
+        }
+
+        function showChart() {
+            MovieAPI.getBoxOffice()
+                .then(function(response) {
+                    const movies = response.boxOfficeResult.dailyBoxOfficeList;
+                    drawChart(movies);
+                    new bootstrap.Modal(document.getElementById('chartModal')).show();
+                })
+                .catch(function(error) {
+                    console.error('API 데이터 로드 실패:', error);
+                    alert('차트 데이터를 불러오는데 실패했습니다.');
+                });
+        }
+
+        function drawChart(movies) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '영화');
+            data.addColumn('number', '관객수');
+            data.addColumn('number', '매출액(백만)');
+
+            movies.forEach(movie => {
+                data.addRow([
+                    movie.movieNm,
+                    parseInt(movie.audiCnt),
+                    Math.floor(parseInt(movie.salesAmt) / 1000000)
+                ]);
+            });
+
+            const options = {
+                title: '일별 박스오피스 현황',            
+                backgroundColor: 'transparent',
+                is3D: true,
+                chartArea: {width: '100%', height: '90%'},              
+            };
+
+            const chart = new google.visualization.PieChart(document.getElementById('boxOfficeChart'));
+            chart.draw(data, options);
+        }
+
+        function displayMovies(movies) {
+            const rankList = $('#rankList');
+            rankList.empty();
+            
+            movies.forEach(movie => {
+                const card = `
+                    <div class="col-md-4 col-lg-3">
+                        <div class="card h-100">
+                            <div class="position-relative">
+                                <span class="position-relative top-0 start-0 badge text-dark bg-secondary-subtle m-2">
+                                    ${movie.rank}위
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">${movie.movieNm}</h5>
+                                <p class="card-text">
+                                    관객수: ${Number(movie.audiCnt).toLocaleString()}명<br>
+                                    누적관객: ${Number(movie.audiAcc).toLocaleString()}명<br>
+                                    매출액: ${Number(movie.salesAmt).toLocaleString()}원<br>
+                                    누적매출: ${Number(movie.salesAcc).toLocaleString()}원
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                rankList.append(card);
+            });
+        }
+    </script>
+</body>
+</html>

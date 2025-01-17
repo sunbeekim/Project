@@ -9,9 +9,9 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class MainController {
     
-    @GetMapping("/")
+    @GetMapping("/") // 브라우저 url 주소
     public String home() {
-        return "home";
+        return "home"; // path : templates/home.html 파일을 렌더링
     }
     
     @GetMapping("/board")
