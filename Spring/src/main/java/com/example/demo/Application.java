@@ -8,13 +8,7 @@ import com.example.demo.model.Post;
 
 @SpringBootApplication
 public class Application {
-<<<<<<< HEAD
-  public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
 
-  }
-}
-=======
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
         //SpringApplication.run(Application.class, args);
@@ -45,4 +39,3 @@ public class Application {
     }
 }
  
->>>>>>> 56db5919a45fec8f390bb6326281522620f0d26b

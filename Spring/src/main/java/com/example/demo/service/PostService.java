@@ -4,10 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.ibatis.session.SqlSession;
 import com.example.demo.model.Post;
-<<<<<<< HEAD
-
-=======
->>>>>>> 56db5919a45fec8f390bb6326281522620f0d26b
 @Service
 public class PostService {
     
@@ -22,9 +18,6 @@ public class PostService {
             throw e;
         }
     }
-<<<<<<< HEAD
-}
-=======
     //게시물 삭제
     public void deletePost(int id) {
     	try {
@@ -46,4 +39,3 @@ public class PostService {
     	}
     }
 }
->>>>>>> 56db5919a45fec8f390bb6326281522620f0d26b
