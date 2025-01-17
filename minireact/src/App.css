@@ -31,6 +31,7 @@ main {
   margin-top: 76px !important;
 }
 
+<<<<<<< HEAD
 .btn {
   font-size: 0.875rem;
   padding: 0.5rem 1rem;
@@ -147,3 +148,38 @@ footer a:hover {
 .min-vh-50 {
   min-height: 50vh;
 }
+=======
+.login-container h1{
+  text-align: center;
+  margin-bottom: 25px;  
+}
+
+.login-container{
+  width: 50%;
+  padding: 20px;
+  margin: 0 auto;
+
+}
+
+.form-control{
+  margin: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.btn {
+  flex: 1 0 1;
+  margin-top: 10px;
+}
+
+
+.signup-link{
+  flex: 1 0 1;
+  margin-left: 10px; 
+}
+>>>>>>> 56db5919a45fec8f390bb6326281522620f0d26b

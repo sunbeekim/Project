@@ -2,10 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<<<<<<< HEAD
 <mapper namespace="com.example.demo.mapper.PostMapper">
     <insert id="insertPost" parameterType="com.example.demo.model.Post">
         INSERT INTO posts (postId, title, content, forename)
         VALUES (#{postId}, #{title}, #{content}, #{forename})
     </insert>
     
+=======
+ <mapper namespace="com.example.demo.mapper.PostMapper">
+    <insert id="insertPost" parameterType="com.example.demo.model.Post">
+        INSERT INTO posts (postId, title, content, forename)
+        VALUES (#{postId}, #{title}, #{content}, #{forename});
+    </insert>
+    
+    <delete id="deletePost" parameterType="Post">
+         DELETE FROM posts WHERE id=#{id};
+    </delete>
+   <select id="selectPost" parameterType="String" resultType="com.example.demo.model.Post">
+    SELECT id, postId, title, content, forename, createAt, views 
+        FROM posts 
+        WHERE postId = #{postId};
+  </select>       
+>>>>>>> 56db5919a45fec8f390bb6326281522620f0d26b
 </mapper>

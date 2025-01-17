@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.ibatis.session.SqlSession;
 import com.example.demo.model.Post;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 56db5919a45fec8f390bb6326281522620f0d26b
 @Service
 public class PostService {
     
@@ -19,4 +22,28 @@ public class PostService {
             throw e;
         }
     }
+<<<<<<< HEAD
 }
+=======
+    //게시물 삭제
+    public void deletePost(int id) {
+    	try {
+    		sqlSession.delete("com.example.demo.mapper.PostMapper.deletePost",id);
+    	}catch(Exception e) {//예외
+    		System.out.println("Error in deletePost: " + e.getMessage());
+    		throw e;
+    	}
+        
+    }
+    
+    public Post selectPost(String postId) {
+    	try {
+    		return sqlSession.selectOne("com.example.demo.mapper.PostMapper.selectPost", postId);
+    	}catch(Exception e) {
+    		System.out.println("Error in selectPost: " + e.getMessage());
+    		throw e;
+    		
+    	}
+    }
+}
+>>>>>>> 56db5919a45fec8f390bb6326281522620f0d26b

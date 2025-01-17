@@ -38,6 +38,14 @@
             WHERE email = #{email}
         )
     </select>
+    
+    <select id="checkUser" parameterType="com.example.demo.dto.UserRequest" resultType="boolean">
+        SELECT EXISTS(
+           SELECT 1
+           FROM users_login 
+           WHERE userId = #{userId} AND password =#{password}
+        ) 
+    </select>
 
     <!-- userId로 forename 조회 -->
     <select id="findForenameByUserId" parameterType="string" resultType="string">
