@@ -155,8 +155,14 @@
                             const commentList = $('#commentList');
                             commentList.empty();
 
+                            // 댓글 맵 생성 (부모 댓글 정보 조회용)
+                            const commentMap = new Map(comments.map(c => [c.id, c]));
+
                             comments.forEach(function(comment) {
                                 const marginLeft = comment.depth > 0 ? `ms-${comment.depth * 4}` : '';
+                                // 부모 댓글 정보 가져오기
+                                const parentComment = comment.parentId ? commentMap.get(comment.parentId) : null;
+                                
                                 const commentHtml = `
                                     <div class="card mb-3 ${marginLeft}">
                                         <div class="card-body">
@@ -167,7 +173,9 @@
                                                 </div>
                                                 <div>
                                                     ${currentUser && comment.userId !== currentUser ? `
-                                                        <button class="btn btn-sm btn-outline-secondary reply-comment" data-comment-id="${comment.id}">
+                                                        <button class="btn btn-sm btn-outline-secondary reply-comment" 
+                                                                data-comment-id="${comment.id}"
+                                                                data-author="${comment.forename}">
                                                             답글
                                                         </button>
                                                     ` : ''}
@@ -176,15 +184,31 @@
                                                     ` : ''}
                                                 </div>
                                             </div>
+                                            ${comment.parentId ? `
+                                                <div class="mb-2">
+                                                    <small class="text-muted">
+                                                        <i class="bi bi-arrow-return-right me-1"></i>
+                                                        <span class="fw-bold">${parentComment.forename}</span>님에게 보내는 답글
+                                                    </small>
+                                                </div>
+                                            ` : ''}
                                             <p class="card-text">${comment.content}</p>
                                         </div>
                                     </div>
 
-                                    <div id="replyForm-${comment.id}" class="card mb-3 ${marginLeft} ms-4" style="display: none;">
+                                    <div id="replyForm-${comment.id}" class="card mb-3 ${marginLeft} ms-4 replyForm" style="display: none;">
                                         <div class="card-body">
+                                            <div class="mb-3">
+                                                <small class="text-muted">
+                                                    <i class="bi bi-arrow-return-right me-1"></i>
+                                                    <span class="fw-bold">${comment.forename}</span>님에게 답글 작성 중
+                                                </small>
+                                            </div>
                                             <textarea class="form-control mb-3 reply-content" rows="3" placeholder="답글을 입력하세요..."></textarea>
                                             <div class="d-flex justify-content-end">
-                                                <button type="button" class="btn btn-primary submit-reply" data-parent-id="${comment.id}" data-depth="${comment.depth + 1}">
+                                                <button type="button" class="btn btn-primary submit-reply" 
+                                                        data-parent-id="${comment.id}" 
+                                                        data-depth="${comment.depth + 1}">
                                                     <i class="bi bi-chat-dots me-1"></i>답글 등록
                                                 </button>
                                             </div>

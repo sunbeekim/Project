@@ -8,7 +8,8 @@
             SELECT 
                 id, boardId, userId, content, forename, createAt, updateAt, 
                 parentId, depth,
-                CAST(id AS CHAR(200)) as path
+                CAST(id AS CHAR(200)) as path,
+                createAt as groupOrder
             FROM comments
             WHERE boardId = #{boardId} AND parentId IS NULL
             
@@ -18,12 +19,15 @@
             SELECT 
                 c.id, c.boardId, c.userId, c.content, c.forename, c.createAt, c.updateAt,
                 c.parentId, c.depth,
-                CONCAT(h.path, ',', c.id) as path
+                CONCAT(h.path, ',', c.id) as path,
+                h.groupOrder
             FROM comments c
             INNER JOIN CommentHierarchy h ON c.parentId = h.id
         )
         SELECT * FROM CommentHierarchy
-        ORDER BY path
+        ORDER BY 
+            SUBSTRING_INDEX(path, ',', 1) ASC,  -- 최상위 댓글은 최신순
+            path ASC                             -- 대댓글은 작성순
     </select>
     
     <select id="findById" resultType="com.example.demo.model.Comment">
