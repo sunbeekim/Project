@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.CommentMapper">
+    
+    <select id="findByBoardId" resultType="com.example.demo.model.Comment">
+        WITH RECURSIVE CommentHierarchy AS (
+            -- 최상위 댓글 선택
+            SELECT 
+                id, boardId, userId, content, forename, createAt, updateAt, 
+                parentId, depth,
+                CAST(id AS CHAR(200)) as path
+            FROM comments
+            WHERE boardId = #{boardId} AND parentId IS NULL
+            
+            UNION ALL
+            
+            -- 하위 댓글 선택
+            SELECT 
+                c.id, c.boardId, c.userId, c.content, c.forename, c.createAt, c.updateAt,
+                c.parentId, c.depth,
+                CONCAT(h.path, ',', c.id) as path
+            FROM comments c
+            INNER JOIN CommentHierarchy h ON c.parentId = h.id
+        )
+        SELECT * FROM CommentHierarchy
+        ORDER BY path
+    </select>
+    
+    <select id="findById" resultType="com.example.demo.model.Comment">
+        SELECT * FROM comments 
+        WHERE id = #{id}
+    </select>
+    
+    <insert id="insert" parameterType="com.example.demo.model.Comment">
+        INSERT INTO comments (
+            boardId, 
+            userId, 
+            content, 
+            forename, 
+            parentId,
+            depth,
+            createAt
+        ) VALUES (
+            #{boardId}, 
+            #{userId}, 
+            #{content}, 
+            #{forename},
+            #{parentId},
+            #{depth},
+            NOW()
+        )
+    </insert>
+    
+    <update id="update" parameterType="com.example.demo.model.Comment">
+        UPDATE comments 
+        SET 
+            content = #{content},
+            updateAt = NOW()
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="delete">
+        DELETE FROM comments 
+        WHERE id = #{id}
+    </delete>
+</mapper>

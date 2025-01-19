@@ -1,0 +1,13 @@
+
+CREATE TABLE `board` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `boardId` varchar(255) NOT NULL,
+   `title` varchar(255) NOT NULL,
+   `content` text NOT NULL,
+   `forename` varchar(100) NOT NULL,
+   `createAt` datetime DEFAULT CURRENT_TIMESTAMP,
+   `views` int(11) DEFAULT '0',
+   PRIMARY KEY (`id`),
+   KEY `fk_board_user` (`boardId`),
+   CONSTRAINT `fk_board_user` FOREIGN KEY (`boardId`) REFERENCES `users_login` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE
+ ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

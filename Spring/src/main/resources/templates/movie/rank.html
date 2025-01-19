@@ -9,30 +9,35 @@
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>일별 박스오피스</h2>
-            <button type="button" class="btn btn-primary" onclick="showChart()">
-                <i class="bi bi-bar-chart-fill me-1"></i>차트 보기
-            </button>
-        </div>
-
-        <!-- 차트 모달 -->
-        <div class="modal fade" id="chartModal" tabindex="-1">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">일별 박스오피스 차트</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="boxOfficeChart" style="height: 800px;"></div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="card shadow-sm">
             <div class="card-body">
                 <div id="rankList" class="row g-4">
                     <!-- 순위 데이터가 여기에 동적으로 로드됨 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 차트 모달 -->
+    <div class="modal fade" id="chartModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">박스오피스 분석</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="boxOfficeChart" style="height: 45vh; width: 100%;"></div>
+                            <div id="salesChart" style="height: 45vh; width: 100%;"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="distributionChart" style="height: 90vh; width: 100%;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,41 +66,202 @@
                 });
         }
 
-        function showChart() {
-            MovieAPI.getBoxOffice()
-                .then(function(response) {
-                    const movies = response.boxOfficeResult.dailyBoxOfficeList;
-                    drawChart(movies);
-                    new bootstrap.Modal(document.getElementById('chartModal')).show();
-                })
-                .catch(function(error) {
-                    console.error('API 데이터 로드 실패:', error);
-                    alert('차트 데이터를 불러오는데 실패했습니다.');
-                });
+        function calculateAverages(movies) {
+            return {
+                audiCnt: movies.reduce((sum, movie) => sum + parseInt(movie.audiCnt), 0) / movies.length,
+                audiAcc: movies.reduce((sum, movie) => sum + parseInt(movie.audiAcc), 0) / movies.length,
+                salesAmt: movies.reduce((sum, movie) => sum + parseInt(movie.salesAmt), 0) / movies.length,
+                salesAcc: movies.reduce((sum, movie) => sum + parseInt(movie.salesAcc), 0) / movies.length
+            };
         }
 
-        function drawChart(movies) {
+        function showMovieAnalysis(selectedMovie, movies) {
+            const averages = calculateAverages(movies);
+            drawBoxOfficeChart(selectedMovie, movies);
+            drawSalesChart(movies, averages);
+            drawDistributionChart(movies, selectedMovie);
+            new bootstrap.Modal(document.getElementById('chartModal')).show();
+        }
+
+        function drawBoxOfficeChart(selectedMovie, movies) {
             const data = new google.visualization.DataTable();
-            data.addColumn('string', '영화');
+            data.addColumn('string', '순위');
             data.addColumn('number', '관객수');
-            data.addColumn('number', '매출액(백만)');
+            data.addColumn({type: 'string', role: 'style'});
+            data.addColumn({type: 'string', role: 'tooltip', 'p': {'html': true}});
 
             movies.forEach(movie => {
+                const isSelected = movie.movieNm === selectedMovie.movieNm;
+                const color = isSelected ? '#FF6B6B' : '#4DABF7';
+                const tooltip = `
+                    <div style="padding:10px">
+                        <strong>${movie.movieNm}</strong><br>
+                        순위: ${movie.rank}위<br>
+                        관객수: ${Number(movie.audiCnt).toLocaleString()}명<br>
+                        매출액: ${Number(movie.salesAmt).toLocaleString()}원<br>
+                        점유율: ${movie.salesShare}%
+                    </div>
+                `;
                 data.addRow([
-                    movie.movieNm,
+                    movie.rank + '위',
                     parseInt(movie.audiCnt),
-                    Math.floor(parseInt(movie.salesAmt) / 1000000)
+                    color,
+                    tooltip
                 ]);
             });
 
             const options = {
-                title: '일별 박스오피스 현황',            
-                backgroundColor: 'transparent',
-                is3D: true,
-                chartArea: {width: '100%', height: '90%'},              
+                title: '박스오피스 순위별 관객수',
+                titleTextStyle: { fontSize: 16, bold: true },
+                height: 400,
+                bar: { groupWidth: '70%' },
+                legend: { position: 'none' },
+                tooltip: { isHtml: true },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                },
+                vAxis: {
+                    title: '관객수',
+                    format: 'short',
+                    minValue: 0
+                },
+                hAxis: {
+                    title: '순위',
+                    textPosition: 'out'
+                }
             };
 
-            const chart = new google.visualization.PieChart(document.getElementById('boxOfficeChart'));
+            const chart = new google.visualization.ColumnChart(document.getElementById('boxOfficeChart'));
+            chart.draw(data, options);
+        }
+
+        function drawDistributionChart(movies, selectedMovie) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '영화명');
+            data.addColumn('number', '관객 1인당 매출 (원)');
+            data.addColumn({type: 'string', role: 'style'});
+            data.addColumn({type: 'string', role: 'tooltip', 'p': {'html': true}});
+
+            // 관객 1인당 매출액으로 정렬
+            const sortedMovies = [...movies].sort((a, b) => {
+                const aPerCustomer = parseInt(a.salesAcc) / parseInt(a.audiAcc);
+                const bPerCustomer = parseInt(b.salesAcc) / parseInt(b.audiAcc);
+                return bPerCustomer - aPerCustomer;
+            });
+
+            sortedMovies.forEach(movie => {
+                const isSelected = movie.movieNm === selectedMovie.movieNm;
+                const color = isSelected ? '#FF6B6B' : '#4DABF7';
+                const perCustomer = parseInt(movie.salesAcc) / parseInt(movie.audiAcc);
+                const tooltip = `
+                    <div style="padding:10px">
+                        <strong>${movie.movieNm}</strong><br>
+                        순위: ${movie.rank}위<br>
+                        관객 1인당 매출: ${Math.round(perCustomer).toLocaleString()}원<br>
+                        누적관객: ${Number(movie.audiAcc).toLocaleString()}명<br>
+                        누적매출: ${Number(movie.salesAcc).toLocaleString()}원
+                    </div>
+                `;
+                data.addRow([
+                    movie.movieNm,
+                    perCustomer,
+                    color,
+                    tooltip
+                ]);
+            });
+
+            const options = {
+                title: '관객 1인당 매출 분석',
+                titleTextStyle: { fontSize: 16, bold: true },
+                height: 400,
+                bar: { groupWidth: '70%' },
+                legend: { position: 'none' },
+                tooltip: { isHtml: true },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                },
+                vAxis: {
+                    title: '관객 1인당 매출 (원)',
+                    format: 'short'
+                },
+                hAxis: {
+                    title: '영화',
+                    textPosition: 'out',
+                    slantedText: true,
+                    slantedTextAngle: 45
+                }
+            };
+
+            const chart = new google.visualization.ColumnChart(document.getElementById('distributionChart'));
+            chart.draw(data, options);
+        }
+
+        function drawSalesChart(movies, averages) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '순위');
+            data.addColumn('number', '누적매출');
+            data.addColumn({type: 'string', role: 'style'});
+            data.addColumn({type: 'string', role: 'tooltip', 'p': {'html': true}});
+            data.addColumn('number', '평균');
+            data.addColumn({type: 'string', role: 'tooltip', 'p': {'html': true}});
+
+            movies.forEach(movie => {
+                const tooltip = `
+                    <div style="padding:10px">
+                        <strong>${movie.movieNm}</strong><br>
+                        순위: ${movie.rank}위<br>
+                        누적매출: ${Number(movie.salesAcc).toLocaleString()}원<br>
+                        평균대비: ${Math.round(parseInt(movie.salesAcc) / averages.salesAcc * 100)}%
+                    </div>
+                `;
+                const avgTooltip = `
+                    <div style="padding:10px">
+                        <strong>전체 평균</strong><br>
+                        ${Number(averages.salesAcc).toLocaleString()}원
+                    </div>
+                `;
+                
+                data.addRow([
+                    movie.rank + '위',
+                    parseInt(movie.salesAcc),
+                    parseInt(movie.salesAcc) > averages.salesAcc ? '#FF6B6B' : '#4DABF7',
+                    tooltip,
+                    averages.salesAcc,
+                    avgTooltip
+                ]);
+            });
+
+            const options = {
+                title: '순위별 누적매출 분포',
+                titleTextStyle: { fontSize: 16, bold: true },
+                height: 300,
+                seriesType: 'bars',
+                series: {
+                    0: { targetAxisIndex: 0 },
+                    1: { type: 'line', color: '#868E96', targetAxisIndex: 0, lineDashStyle: [4, 4] }
+                },
+                legend: { position: 'none' },
+                tooltip: { isHtml: true },
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                },
+                vAxis: {
+                    title: '누적매출',
+                    format: 'short'
+                },
+                hAxis: {
+                    title: '순위',
+                    textPosition: 'out'
+                }
+            };
+
+            const chart = new google.visualization.ComboChart(document.getElementById('salesChart'));
             chart.draw(data, options);
         }
 
@@ -106,11 +272,10 @@
             movies.forEach(movie => {
                 const card = `
                     <div class="col-md-4 col-lg-3">
-                        <div class="card h-100">
-                            <div class="position-relative">
-                                <span class="position-relative top-0 start-0 badge text-dark bg-secondary-subtle m-2">
-                                    ${movie.rank}위
-                                </span>
+                        <div class="card h-100" style="cursor: pointer" onclick="showMovieAnalysis(${JSON.stringify(movie).replace(/"/g, '&quot;')}, ${JSON.stringify(movies).replace(/"/g, '&quot;')})">
+                            <div class="d-flex justify-content-between align-items-center p-2">
+                                <span class="badge text-dark bg-secondary-subtle">${movie.rank}위</span>
+                                <span class="badge text-dark bg-secondary-subtle">차트보기</span>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">${movie.movieNm}</h5>
@@ -127,6 +292,21 @@
                 rankList.append(card);
             });
         }
+
+        function drawPieChart(movies) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('string', '영화');
+            data.addColumn('number', '관객수');
+
+            movies.forEach(movie => {
+                data.addRow([
+                    movie.movieNm,
+                    parseInt(movie.audiCnt)
+                ]);
+            });
+
+    
+         }
     </script>
 </body>
 </html>
