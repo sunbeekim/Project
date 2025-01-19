@@ -13,7 +13,7 @@ public class UserService {
 
   private final UserMapper userMapper;
 
-  public UserService(SqlSession sqlSession, UserMapper userMapper) {   
+  public UserService(SqlSession sqlSession, UserMapper userMapper) {
     this.userMapper = userMapper;
   }
 
@@ -29,27 +29,27 @@ public class UserService {
   @Transactional
   public void createUser(UserRequest userRequest) {
     try {
-        if (userMapper.isEmailExists(userRequest.getEmail())) {
-            throw new RuntimeException("이미 존재하는 이메일입니다.");
-        }
+      if (userMapper.isEmailExists(userRequest.getEmail())) {
+        throw new RuntimeException("이미 존재하는 이메일입니다.");
+      }
 
-        User user = new User();
-        user.setUserId(userRequest.getUserId());
-        user.setPassword(userRequest.getPassword());
-        userMapper.insertUser(user);
+      User user = new User();
+      user.setUserId(userRequest.getUserId());
+      user.setPassword(userRequest.getPassword());
+      userMapper.insertUser(user);
 
-        UserData userData = new UserData();
-        userData.setId(user.getId());
-        userData.setForename(userRequest.getForename());
-        userData.setEmail(userRequest.getEmail());
-        userData.setPhoneNumber(userRequest.getPhoneNumber());
-        userMapper.insertUserData(userData);
-        
+      UserData userData = new UserData();
+      userData.setId(user.getId());
+      userData.setForename(userRequest.getForename());
+      userData.setEmail(userRequest.getEmail());
+      userData.setPhoneNumber(userRequest.getPhoneNumber());
+      userMapper.insertUserData(userData);
+
     } catch (RuntimeException e) {
-        throw e;
+      throw e;
     } catch (Exception e) {
-        System.err.println("Error in createUser: " + e.getMessage());
-        throw new RuntimeException("회원가입 처리 중 오류가 발생했습니다.");
+      System.err.println("Error in createUser: " + e.getMessage());
+      throw new RuntimeException("회원가입 처리 중 오류가 발생했습니다.");
     }
   }
 

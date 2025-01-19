@@ -13,30 +13,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentService implements CommentDAO {
 
-    private final CommentMapper commentMapper;
+  private final CommentMapper commentMapper;
 
-    @Override
-    public List<Comment> findByBoardId(Long boardId) {
-        return commentMapper.findByBoardId(boardId);
-    }
+  @Override
+  public List<Comment> findByBoardId(Long boardId) {
+    return commentMapper.findByBoardId(boardId);
+  }
 
-    @Override
-    public Comment findById(Long id) {
-        return commentMapper.findById(id);
-    }
+  @Override
+  public Comment findById(Long id) {
+    return commentMapper.findById(id);
+  }
 
-    @Override
-    public void insert(Comment comment) {
-        commentMapper.insert(comment);
-    }
+  @Override
+  public void insert(Comment comment) {
+    commentMapper.insert(comment);
+  }
 
-    @Override
-    public void update(Comment comment) {
-        commentMapper.update(comment);
-    }
+  @Override
+  public void update(Comment comment) {
+    commentMapper.update(comment);
+  }
 
-    @Override
-    public void delete(Long id) {
-        commentMapper.delete(id);
-    }
-} 
+  @Override
+  public void delete(Long id) {
+    commentMapper.delete(id);
+  }
+}

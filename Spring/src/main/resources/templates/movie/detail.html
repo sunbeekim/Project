@@ -1,100 +1,105 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header">
-    <meta charset="UTF-8">
+  <head th:replace="fragments/header :: header">
+    <meta charset="UTF-8" />
     <title>영화 상세정보</title>
-</head>
-<body>
+  </head>
+  <body>
     <nav th:replace="fragments/header :: nav"></nav>
 
     <div class="container mt-5">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div id="posterContainer">
-                            <!-- 포스터 이미지가 여기에 들어갑니다 -->
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-3 fw-bold">감독</div>
-                                    <div class="col-md-9" id="directorInfo">정보없음</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-3 fw-bold">출연</div>
-                                    <div class="col-md-9" id="actorInfo">정보없음</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-3 fw-bold">장르</div>
-                                    <div class="col-md-9" id="genreInfo">정보없음</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-3 fw-bold">제작년도</div>
-                                    <div class="col-md-9" id="yearInfo">정보없음</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-3 fw-bold">상영시간</div>
-                                    <div class="col-md-9" id="runtimeInfo">정보없음</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-3 fw-bold">등급</div>
-                                    <div class="col-md-9" id="ratingInfo">정보없음</div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-3 fw-bold">제작사</div>
-                                    <div class="col-md-9" id="companyInfo">정보없음</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">줄거리</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="plotInfo">줄거리 정보가 없습니다.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div id="posterContainer">
+                <!-- 포스터 이미지가 여기에 들어갑니다 -->
+              </div>
             </div>
+            <div class="col-md-8">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">감독</div>
+                    <div class="col-md-9" id="directorInfo">정보없음</div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">출연</div>
+                    <div class="col-md-9" id="actorInfo">정보없음</div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">장르</div>
+                    <div class="col-md-9" id="genreInfo">정보없음</div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">제작년도</div>
+                    <div class="col-md-9" id="yearInfo">정보없음</div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">상영시간</div>
+                    <div class="col-md-9" id="runtimeInfo">정보없음</div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">등급</div>
+                    <div class="col-md-9" id="ratingInfo">정보없음</div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">제작사</div>
+                    <div class="col-md-9" id="companyInfo">정보없음</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">줄거리</h5>
+                </div>
+                <div class="card-body">
+                  <div id="plotInfo">줄거리 정보가 없습니다.</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <footer th:replace="fragments/footer :: footer"></footer>
 
     <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            const movie = JSON.parse(localStorage.getItem('selectedMovie'));
-            if (!movie) {
-                window.location.href = '/movie/search';
-                return;
-            }
+      document.addEventListener('DOMContentLoaded', function () {
+        const movie = JSON.parse(localStorage.getItem('selectedMovie'));
+        if (!movie) {
+          window.location.href = '/movie/search';
+          return;
+        }
 
-            // 제목 설정
-            document.title = movie.title + ' - 영화 상세정보';
+        // 제목 설정
+        document.title = movie.title + ' - 영화 상세정보';
 
-            // 포스터 이미지 설정
-            const posterContainer = document.getElementById('posterContainer');
-            if (movie.posters) {
-                const posterUrl = movie.posters.split('|')[0];
-                posterContainer.innerHTML = `<img src="${posterUrl}" alt="${movie.title}" class="img-fluid rounded shadow">`;
-            } else {
-                posterContainer.innerHTML = `<div class="bg-light p-5 text-center rounded"><span class="text-muted">이미지가 없습니다</span></div>`;
-            }
+        // 포스터 이미지 설정
+        const posterContainer = document.getElementById('posterContainer');
+        if (movie.posters) {
+          const posterUrl = movie.posters.split('|')[0];
+          posterContainer.innerHTML = `<img src="${posterUrl}" alt="${movie.title}" class="img-fluid rounded shadow">`;
+        } else {
+          posterContainer.innerHTML = `<div class="bg-light p-5 text-center rounded"><span class="text-muted">이미지가 없습니다</span></div>`;
+        }
 
-            // 영화 정보 설정
-            document.getElementById('directorInfo').textContent = movie.directors?.director?.map(d => d.directorNm).join(', ') || '정보없음';
-            document.getElementById('actorInfo').textContent = movie.actors?.actor?.map(a => a.actorNm).join(', ') || '정보없음';
-            document.getElementById('genreInfo').textContent = movie.genre || '정보없음';
-            document.getElementById('yearInfo').textContent = movie.prodYear || '정보없음';
-            document.getElementById('runtimeInfo').textContent = movie.runtime ? `${movie.runtime}분` : '정보없음';
-            document.getElementById('ratingInfo').textContent = movie.rating || '정보없음';
-            document.getElementById('companyInfo').textContent = movie.company || '정보없음';
-            document.getElementById('plotInfo').textContent = movie.plots?.plot?.[0]?.plotText || '줄거리 정보가 없습니다.';
-        });
+        // 영화 정보 설정
+        document.getElementById('directorInfo').textContent =
+          movie.directors?.director?.map((d) => d.directorNm).join(', ') || '정보없음';
+        document.getElementById('actorInfo').textContent =
+          movie.actors?.actor?.map((a) => a.actorNm).join(', ') || '정보없음';
+        document.getElementById('genreInfo').textContent = movie.genre || '정보없음';
+        document.getElementById('yearInfo').textContent = movie.prodYear || '정보없음';
+        document.getElementById('runtimeInfo').textContent = movie.runtime
+          ? `${movie.runtime}분`
+          : '정보없음';
+        document.getElementById('ratingInfo').textContent = movie.rating || '정보없음';
+        document.getElementById('companyInfo').textContent = movie.company || '정보없음';
+        document.getElementById('plotInfo').textContent =
+          movie.plots?.plot?.[0]?.plotText || '줄거리 정보가 없습니다.';
+      });
     </script>
-</body>
+  </body>
 </html>

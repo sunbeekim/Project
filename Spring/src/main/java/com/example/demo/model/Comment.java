@@ -10,13 +10,13 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
-    private Long id;
-    private Long boardId;
-    private String userId;
-    private String content;
-    private String forename;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
-    private Long parentId;
-    private int depth;
+  private Long id;
+  private Long boardId;
+  private String userId;
+  private String content;
+  private String forename;
+  private LocalDateTime createAt;
+  private LocalDateTime updateAt;
+  private Long parentId;
+  private int depth;
 }

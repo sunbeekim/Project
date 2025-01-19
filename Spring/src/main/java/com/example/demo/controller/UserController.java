@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.UserRequest;
-import com.example.demo.model.User;
 
 import com.example.demo.service.UserService;
 
@@ -24,22 +23,20 @@ public class UserController {
     this.userService = userService;
   }
 
-  
-
   // 회원가입
   @PostMapping("/signup")
   public ResponseEntity<String> signup(@RequestBody UserRequest userRequest) {
     try {
-        userService.createUser(userRequest);
-        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+      userService.createUser(userRequest);
+      return ResponseEntity.ok("회원가입이 완료되었습니다.");
     } catch (RuntimeException e) {
-        // RuntimeException으로 던져진 사용자 정의 메시지 처리
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                           .body(e.getMessage());
+      // RuntimeException으로 던져진 사용자 정의 메시지 처리
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(e.getMessage());
     } catch (Exception e) {
-        // 기타 예외 처리
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                           .body("회원가입에 실패했습니다. 다시 시도해주세요.");
+      // 기타 예외 처리
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("회원가입에 실패했습니다. 다시 시도해주세요.");
     }
   }
 
@@ -97,9 +94,9 @@ public class UserController {
     boolean userExists = userService.findByUserId(userId);
 
     if (userExists) {
-        return ResponseEntity.status(409).body("이미 존재하는 아이디입니다.");
+      return ResponseEntity.status(409).body("이미 존재하는 아이디입니다.");
     } else {
-        return ResponseEntity.ok("사용 가능한 아이디입니다.");
+      return ResponseEntity.ok("사용 가능한 아이디입니다.");
     }
   }
 
