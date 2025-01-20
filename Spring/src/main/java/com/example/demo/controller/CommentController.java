@@ -26,7 +26,7 @@ public class CommentController {
     List<Comment> comments = commentService.findByBoardId(boardId);
     return ResponseEntity.ok(comments);
   }
-
+ 
   @PostMapping
   public ResponseEntity<String> createComment(@RequestBody Comment comment) {
     try {

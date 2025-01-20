@@ -13,6 +13,11 @@ public class UserService {
 
   private final UserMapper userMapper;
 
+  // 초기 다양한 형태의 DB연동을 경험하기 위해 MyBatis SqlSession 객체를 사용했음
+  // 저희 프로젝트의 DAO와 MAPPER가 쓰이는데 구분되는 이유는 DAO는 DB접근 로직(MAPPER를 가지고 있음)으로 쓰이고,
+  // MAPPER는 실제 XML과 매핑되는 객체입니다.
+  // 결국 실제 DB와 연결되는 로직(Mapper나 sqlsession 같은 애들)을 가지고 있는 메서드가 DAO
+  // DAO를 구현하지 않으면 Mapper나 sqlsession이 작게 감싸진 DAO 자체가 됨
   public UserService(SqlSession sqlSession, UserMapper userMapper) {
     this.userMapper = userMapper;
   }
@@ -26,7 +31,7 @@ public class UserService {
     }
   }
 
-  @Transactional
+  @Transactional // 트랜잭션 무결성 - 실패하면 작업시작 전 상태 유지
   public void createUser(UserRequest userRequest) {
     try {
       if (userMapper.isEmailExists(userRequest.getEmail())) {

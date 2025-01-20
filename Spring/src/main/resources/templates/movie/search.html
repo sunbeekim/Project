@@ -154,7 +154,7 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-md-4" id="posterContainer">
-                  <!-- 포스터 이미지가 여기에 들어갑니다 -->
+                  <!-- 포스터 이미지가 여기에 들어감 posterContainer-->
                 </div>
                 <div class="col-md-8">
                   <div class="card mb-4">
@@ -258,9 +258,10 @@
         </div>
       </div>
     </div>
-
-    <footer th:replace="fragments/footer :: footer"></footer>
-
+    <div>
+      <!---->
+      <footer th:replace="fragments/footer :: footer"></footer>
+    </div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script th:inline="javascript">
       // Google Charts 초기화
@@ -272,7 +273,7 @@
           console.log('Google Charts loaded');
         });
       });
-
+      // 인코딩 중복문제로 컨트롤러로 분리 보류
       async function handleSearch() {
         showLoading(true);
 
@@ -340,7 +341,7 @@
           const imageUrl = posterUrl || stillUrl;
           const directorNames =
             movie.directors?.director?.map((dir) => dir.directorNm).join(', ') || '정보 없음';
-
+          // 백틱으로 HTML/CSS
           const movieCard = `
                     <div class="col">
                         <div class="card h-100" onclick="showMovieDetail(${JSON.stringify(

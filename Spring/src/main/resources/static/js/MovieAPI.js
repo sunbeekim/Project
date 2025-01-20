@@ -13,13 +13,5 @@ const MovieAPI = {
         targetDt: targetDate
       }
     });
-  },
-
-  // 크롤링 데이터 조회
-  getCrawlingData: () => {
-    return $.ajax({
-      url: '/api/movie/boxoffice/crawling',
-      method: 'GET'
-    });
   }
 };

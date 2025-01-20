@@ -8,6 +8,7 @@
   <select id="findAll" resultType="com.example.demo.model.Board">
     SELECT id, boardId, title, content, forename, createAt, views
     FROM board
+    ORDER BY createAt DESC
   </select>
 
   <!-- ID로 게시물 조회 -->
