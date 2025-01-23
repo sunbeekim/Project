@@ -3,13 +3,13 @@ package com.example.demo.service;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.UserRequest;
 import com.example.demo.model.*;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.dao.UserDAO;
 
 @Service
-public class UserService {
+public class UserService implements UserDAO {
 
   private final UserMapper userMapper;
 
@@ -18,10 +18,11 @@ public class UserService {
   // MAPPER는 실제 XML과 매핑되는 객체입니다.
   // 결국 실제 DB와 연결되는 로직(Mapper나 sqlsession 같은 애들)을 가지고 있는 메서드가 DAO
   // DAO를 구현하지 않으면 Mapper나 sqlsession이 작게 감싸진 DAO 자체가 됨
-  public UserService(SqlSession sqlSession, UserMapper userMapper) {
+  public UserService(UserMapper userMapper) {
     this.userMapper = userMapper;
   }
 
+  @Override
   public boolean findByUserId(String userId) {
     try {
       return userMapper.isUserIdExists(userId);
@@ -31,6 +32,7 @@ public class UserService {
     }
   }
 
+  @Override
   @Transactional // 트랜잭션 무결성 - 실패하면 작업시작 전 상태 유지
   public void createUser(UserRequest userRequest) {
     try {
@@ -58,10 +60,12 @@ public class UserService {
     }
   }
 
+  @Override
   public String getForenameByUserId(String userId) {
     return userMapper.findForenameByUserId(userId);
   }
 
+  @Override
   public boolean validUser(LoginRequest login) {
     User user = userMapper.findByUserId(login.getUserId());
     return user != null && user.getPassword().equals(login.getPassword());
