@@ -13,5 +13,14 @@ const MovieAPI = {
         targetDt: targetDate
       }
     });
+  },
+
+  // 영화 검색 API
+  searchMovies: (params) => {
+    return $.ajax({
+      url: '/api/movie/search',
+      method: 'GET',
+      data: params
+    });
   }
 };

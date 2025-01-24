@@ -51,7 +51,7 @@
     <footer th:replace="fragments/footer :: footer"></footer>
 
     <script th:inline="javascript">
-      $(document).ready(function () {
+      $(document).ready(() => {
         const id = new URLSearchParams(window.location.search).get('id');
         const currentUser = /*[[${session.userId}]]*/ null;
 
@@ -63,7 +63,7 @@
 
         // 게시글 조회 및 조회수 증가
         BoardAPI.getBoardById(id)
-          .then(function (board) {
+          .then((board) => {
             // 조회수 증가
             const updatedBoard = {
               ...board,
@@ -71,7 +71,7 @@
             };
 
             // 게시글 업데이트 (조회수 증가)
-            BoardAPI.updateBoard(id, updatedBoard).catch(function (error) {
+            BoardAPI.updateBoard(id, updatedBoard).catch((error) => {
               console.error('조회수 증가 실패:', error);
             });
 
@@ -88,26 +88,26 @@
               $('#deleteBtn').show();
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.error('게시글 조회 실패:', error);
             alert('게시글을 불러오는데 실패했습니다.');
             location.href = '/board/list';
           });
 
         // 수정 버튼 클릭 이벤트
-        $('#editBtn').on('click', function () {
+        $('#editBtn').on('click', () => {
           location.href = `/board/edit?id=${id}`;
         });
 
         // 삭제 버튼 클릭 이벤트
-        $('#deleteBtn').on('click', function () {
+        $('#deleteBtn').on('click', () => {
           if (confirm('정말 삭제하시겠습니까?')) {
             BoardAPI.deleteBoard(id)
-              .then(function () {
+              .then(() => {
                 alert('게시글이 삭제되었습니다.');
                 location.href = '/board/list';
               })
-              .catch(function (error) {
+              .catch((error) => {
                 console.error('게시글 삭제 실패:', error);
                 alert('게시글 삭제에 실패했습니다.');
               });

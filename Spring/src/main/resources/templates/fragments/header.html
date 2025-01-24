@@ -87,11 +87,11 @@
     </style>
     <script>
       // 페이지 로드 시 세션 체크
-      $(document).ready(function () {
+      $(document).ready(() => {
         $.ajax({
           url: '/api/users/check-session',
           method: 'GET',
-          success: function (response) {
+          success: (response) => {
             if (response.loggedIn) {
               $('.nav-logged-out').hide();
               $('.nav-logged-in').show();
@@ -101,7 +101,7 @@
               $('.nav-logged-in').hide();
             }
           },
-          error: function () {
+          error: () => {
             $('.nav-logged-out').show();
             $('.nav-logged-in').hide();
           }
@@ -109,13 +109,13 @@
       });
 
       // 로그아웃 함수 추가
-      function logout() {
+      const logout = () => {
         UserAPI.logout()
-          .then(function () {
+          .then(() => {
             alert('로그아웃되었습니다.');
             location.href = '/';
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.error('로그아웃 실패:', error);
             alert('로그아웃에 실패했습니다.');
           });

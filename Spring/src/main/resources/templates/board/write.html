@@ -41,7 +41,7 @@
     <footer th:replace="fragments/footer :: footer"></footer>
 
     <script th:inline="javascript">
-      $(document).ready(function () {
+      $(document).ready(() => {
         const forename = /*[[${session.forename}]]*/ null;
         const userId = /*[[${session.userId}]]*/ null;
 
@@ -51,7 +51,7 @@
           return;
         }
 
-        $('#writeForm').on('submit', function (e) {
+        $('#writeForm').on('submit', (e) => {
           e.preventDefault();
 
           const formData = {
@@ -72,11 +72,11 @@
           }
 
           BoardAPI.createBoard(formData)
-            .then(function () {
+            .then(() => {
               alert('게시글이 등록되었습니다.');
               location.href = '/board/list';
             })
-            .catch(function (error) {
+            .catch((error) => {
               console.error('게시글 등록 실패:', error);
               alert('게시글 등록에 실패했습니다.');
             });

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.SearchConditionMapper">
+    
+    <insert id="save" parameterType="com.example.demo.model.SearchCondition">
+        INSERT INTO search_condition (
+            nation, start_year, end_year, title, actor, director, search_date, search_result
+        ) VALUES (
+            #{nation}, #{startYear}, #{endYear}, #{title}, #{actor}, #{director}, 
+            #{searchDate}, #{searchResult}
+        )
+    </insert>
+    
+    <select id="findByConditions" resultType="com.example.demo.model.SearchCondition">
+        SELECT * FROM search_condition 
+        WHERE COALESCE(nation, '') = COALESCE(#{nation}, '')
+        AND COALESCE(start_year, '') = COALESCE(#{startYear}, '')
+        AND COALESCE(end_year, '') = COALESCE(#{endYear}, '')
+        AND COALESCE(title, '') = COALESCE(#{title}, '')
+        AND COALESCE(actor, '') = COALESCE(#{actor}, '')
+        AND COALESCE(director, '') = COALESCE(#{director}, '')
+        ORDER BY search_date DESC
+        LIMIT 1
+    </select>
+    
+</mapper> 
