@@ -591,7 +591,7 @@
 
         const options = {
           title: '장르별 영화 수',
-          pieHole: 0.4,
+          is3D: true,
           backgroundColor: 'transparent',
           colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
           chartArea: { width: '80%', height: '80%' }
@@ -616,9 +616,10 @@
         const options = {
           title: '배우별 출연 횟수 (상위 10명)',
           backgroundColor: 'transparent',
+          is3D: true,
           hAxis: { title: '출연 횟수' },
           vAxis: { title: '배우' },
-          pieHole: 0.4,
+         
           colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
           chartArea: { width: '80%', height: '80%' }
         };
@@ -641,10 +642,11 @@
 
         const options = {
           title: '감독별 작품 수 (상위 10명)',
+          is3D: true,
           backgroundColor: 'transparent',
           hAxis: { title: '감독' },
           vAxis: { title: '작품 수' },
-          pieHole: 0.4,
+          
           colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
           chartArea: { width: '80%', height: '80%' }
         };
@@ -665,16 +667,43 @@
         const options = {
           title: '상영시간별 영화 수',
           backgroundColor: 'transparent',
-          hAxis: { title: '상영시간 구간' },
-          vAxis: { title: '영화 수' },
-          pieHole: 0.4,
-          colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
-          chartArea: { width: '80%', height: '80%' }
+          hAxis: { title: '영화 수', minValue: 0 }, // 가로축 제목
+          vAxis: { title: '상영시간 구간' },         // 세로축 제목
+          chartArea: { width: '80%', height: '80%' },
+          colors: ['#A4193D'] // 막대 색상
         };
 
-        const chart = new google.visualization.PieChart(document.getElementById('runtimeChart'));
+        const chart = new google.visualization.BarChart(document.getElementById('runtimeChart'));
         chart.draw(data, options);
       }
+ //====================================================================================    
+      /*   //추가 평균평점 
+      function drawAverageRatingChart(averageRatings){
+    	  const data= new google.visualization.DataTable();
+    	  data.addColumn('string','영화 제목');
+    	  data.addColumn('number','평균 평점');
+    	  
+    	  Object.entries(averageRatings).forEach(([movie,rating])=>{
+    		  data.addRow([movie,rating]);
+    	  });
+            
+      const options={
+    		  title:'영화별 평균 평점',
+    		  backgroundColor: 'transparent',
+    		  hAxis:{title:'평균 평점', minValue:0, maxValue:10},
+    	      vAxis:{title:'영화 제목'},
+    	      
+    	      colors:['#A4193D'],
+    	      chartArea:{width: '80%', height: '80%' },
+    	      legend:{position:'none'},
+    	      bar:{groupWidth: '75%'}
+    	      
+      };
+      
+      const chart=new google.visualization.BarChart(document.getElementById('averageRatingChart'));
+      chart.draw(data, options);
+      } */
+
     </script>
   </body>
 </html>
