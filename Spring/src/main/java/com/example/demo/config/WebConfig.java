@@ -11,8 +11,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebConfig {
 
   @Bean
-  public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
+  public WebMvcConfigurer corsConfigurer() { // CORS 설정
+    return new WebMvcConfigurer() { 
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 모든 URL 허용
@@ -25,14 +25,19 @@ public class WebConfig {
   }
 
   @Bean
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
+  public WebClient webClient() { // 영화 정보 조회를 위한 WebClient 빈 등록
+    return WebClient.builder()
+        .baseUrl("http://api.koreafilm.or.kr") // 기본 URL 설정
+        .build();
   }
 
   @Bean
-  public WebClient webClient() {
+  public WebClient kobisWebClient() {
     return WebClient.builder()
-        .baseUrl("http://api.koreafilm.or.kr")
+        .baseUrl("http://www.kobis.or.kr")
+        .codecs(configurer -> configurer
+            .defaultCodecs()
+            .maxInMemorySize(5 * 1024 * 1024)) // 1회 호출 시 최대 근사치 2.3MB 메모리 사용 넉넉하게 5MB로 설정
         .build();
   }
 }

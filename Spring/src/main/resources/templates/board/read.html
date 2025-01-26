@@ -52,7 +52,7 @@
 
     <script th:inline="javascript">
       $(document).ready(() => {
-        const id = new URLSearchParams(window.location.search).get('id');
+        const id = new URLSearchParams(window.location.search).get('id'); // 현재 url이 가지고 있는 쿼리 파라미터 값 가져오기
         const currentUser = /*[[${session.userId}]]*/ null;
 
         if (!id) {

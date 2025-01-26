@@ -10,17 +10,18 @@ import java.util.Map;
 import com.example.demo.service.MovieService;
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Slf4j
-@RestController
-@RequestMapping("/api/movies")
-@RequiredArgsConstructor
+@Slf4j // 로깅 기능 제공
+@RestController // 컨트롤러 클래스 정의
+@RequestMapping("/api/movies") // 기본 URL 경로 설정
+@RequiredArgsConstructor // 생성자 주입 어노테이션
 public class MovieController {
-    private final MovieService movieService;
+    private final MovieService movieService; // 영화 서비스 주입
 
+    // 일일 박스오피스 조회
     @GetMapping("/boxoffice/daily")
     public ResponseEntity<?> getDailyBoxOffice(@RequestParam String targetDt) {
         try {
-            Map<String, Object> result = movieService.getDailyBoxOffice(targetDt);
+            Map<String, Object> result = movieService.getDailyBoxOffice(targetDt); // 영화 서비스에서 일일 박스오피스 조회
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("박스오피스 API 호출 실패", e);
@@ -29,17 +30,18 @@ public class MovieController {
         }
     }
 
+    // 영화 검색
     @GetMapping("/search")
     public ResponseEntity<?> searchMovies(
-        @RequestParam(required = false) String nation,
-        @RequestParam(required = false) String startYear,
-        @RequestParam(required = false) String endYear,
-        @RequestParam(required = false) String title,
-        @RequestParam(required = false) String actor,
-        @RequestParam(required = false) String director
+        @RequestParam(required = false) String nation, // 국가 조회
+        @RequestParam(required = false) String startYear, // 시작 연도 조회
+        @RequestParam(required = false) String endYear, // 종료 연도 조회
+        @RequestParam(required = false) String title, // 영화 제목 조회
+        @RequestParam(required = false) String actor, // 영화 출연 배우 조회
+        @RequestParam(required = false) String director // 영화 감독 조회
     ) {
         try {
-            JsonNode result = movieService.searchMovies(nation, startYear, endYear, title, actor, director);
+            JsonNode result = movieService.searchMovies(nation, startYear, endYear, title, actor, director); // JsonNode 타입으로 반환
             return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(result);
