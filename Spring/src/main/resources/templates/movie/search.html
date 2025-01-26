@@ -237,7 +237,7 @@
 
             const response = await MovieAPI.searchMovies(params);
             const movies = response.Data?.[0]?.Result || [];
-            
+            console.log(movies);
             displayMovies(movies);
 
             if (google && google.visualization) {

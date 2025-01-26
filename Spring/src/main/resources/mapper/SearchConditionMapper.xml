@@ -2,25 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.SearchConditionMapper">
     
-    <insert id="save" parameterType="com.example.demo.model.SearchCondition">
-        INSERT INTO search_condition (
-            nation, start_year, end_year, title, actor, director, search_date, search_result
+    <insert id="save" parameterType="com.example.demo.model.SearchCondition" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO SearchCondition (
+            nation, startYear, endYear, title, actor, director
         ) VALUES (
-            #{nation}, #{startYear}, #{endYear}, #{title}, #{actor}, #{director}, 
-            #{searchDate}, #{searchResult}
+            #{nation}, #{startYear}, #{endYear}, #{title}, #{actor}, #{director}
         )
     </insert>
     
-    <select id="findByConditions" resultType="com.example.demo.model.SearchCondition">
-        SELECT * FROM search_condition 
-        WHERE COALESCE(nation, '') = COALESCE(#{nation}, '')
-        AND COALESCE(start_year, '') = COALESCE(#{startYear}, '')
-        AND COALESCE(end_year, '') = COALESCE(#{endYear}, '')
-        AND COALESCE(title, '') = COALESCE(#{title}, '')
-        AND COALESCE(actor, '') = COALESCE(#{actor}, '')
-        AND COALESCE(director, '') = COALESCE(#{director}, '')
-        ORDER BY search_date DESC
+    <select id="findByConditions" parameterType="com.example.demo.model.SearchCondition" 
+            resultType="com.example.demo.model.SearchCondition">
+        SELECT * FROM SearchCondition 
+        WHERE (nation = #{nation} OR (#{nation} IS NULL AND nation IS NULL))
+        AND (startYear = #{startYear} OR (#{startYear} IS NULL AND startYear IS NULL))
+        AND (endYear = #{endYear} OR (#{endYear} IS NULL AND endYear IS NULL))
+        AND (title = #{title} OR (#{title} IS NULL AND title IS NULL))
+        AND (actor = #{actor} OR (#{actor} IS NULL AND actor IS NULL))
+        AND (director = #{director} OR (#{director} IS NULL AND director IS NULL))
+        ORDER BY createdAt DESC
         LIMIT 1
+    </select>
+    
+    <select id="findById" parameterType="integer" resultType="com.example.demo.model.SearchCondition">
+        SELECT * FROM SearchCondition WHERE id = #{id}
     </select>
     
 </mapper> 

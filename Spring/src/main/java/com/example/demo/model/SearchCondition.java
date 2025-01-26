@@ -1,23 +1,22 @@
 package com.example.demo.model;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import java.time.LocalDateTime;
 
-@Getter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class SearchCondition {
-    private Long id;
+    private Integer id;
     private String nation;
     private String startYear;
     private String endYear;
     private String title;
     private String actor;
     private String director;
-    private LocalDateTime searchDate;
-    private String searchResult;
+    private LocalDateTime createdAt;
 } 

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class WebConfig {
@@ -26,5 +27,12 @@ public class WebConfig {
   @Bean
   public RestTemplate restTemplate() {
     return new RestTemplate();
+  }
+
+  @Bean
+  public WebClient webClient() {
+    return WebClient.builder()
+        .baseUrl("http://api.koreafilm.or.kr")
+        .build();
   }
 }
