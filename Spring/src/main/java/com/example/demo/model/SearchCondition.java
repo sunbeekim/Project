@@ -19,4 +19,6 @@ public class SearchCondition {
     private String actor;
     private String director;
     private LocalDateTime createdAt;
+    private Integer totalMovies;
+    private Integer uniqueMovies;
 } 

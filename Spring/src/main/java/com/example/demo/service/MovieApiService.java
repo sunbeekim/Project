@@ -84,7 +84,7 @@ public class MovieApiService {
                 .bodyToMono(String.class)
                 .block();
                 
-            log.info("API 응답 결과: {}", response);
+            //log.info("API 응답 결과: {}", response);
             return response;
                 
         } catch (Exception e) {

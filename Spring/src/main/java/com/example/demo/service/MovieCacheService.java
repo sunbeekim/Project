@@ -87,7 +87,7 @@ public class MovieCacheService {
 
     public void saveSearchResult(SearchCondition searchCondition, JsonNode results) {
         try {
-            // 검색 조건 저장
+            // 검색 조건 저장 (이미 통계 정보가 설정되어 있음)
             searchConditionMapper.save(searchCondition);
             
             // 영화 결과 저장

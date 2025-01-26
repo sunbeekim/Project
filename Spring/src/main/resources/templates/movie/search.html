@@ -128,8 +128,9 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h4 class="mb-0">영화 목록</h4>
           <div>
-            <span class="badge bg-primary" id="totalMovieCount">총 0개</span>
-            <span class="badge bg-secondary" id="uniqueMovieCount">중복제거 0개</span>
+            <span class="badge bg-primary" id="totalMovieCount">전체 영화: 0개</span>
+            <span class="badge bg-warning" id="duplicateMovieCount">중복 영화: 0개</span>
+            <span class="badge bg-success" id="uniqueMovieCount">검색 영화: 0개</span>
           </div>
         </div>
         <div class="card-body">
@@ -238,7 +239,7 @@
             const response = await MovieAPI.searchMovies(params);
             const movies = response.Data?.[0]?.Result || [];
             console.log(movies);
-            displayMovies(movies);
+            displayMovies(movies, response);
 
             if (google && google.visualization) {
                 processChartData(movies);
@@ -256,13 +257,18 @@
         }
       }
 
-      const displayMovies = (movies) => {
+      const displayMovies = (movies, response) => {
         const movieGrid = $('#movieGrid');
         movieGrid.empty();
 
-        // 전체 영화 수와 중복 제거된 영화 수 표시
-        $('#totalMovieCount').text(`검색된 영화: ${movies.TotalCount || 0}개`);
-        $('#uniqueMovieCount').text(`표시된 영화: ${movies.length}개`);
+        // 전체/중복/검색된 영화 수 표시
+        const totalMovies = response.totalMovies || 0;
+        const uniqueMovies = response.uniqueMovies || 0;
+        const duplicateMovies = totalMovies - uniqueMovies;
+
+        $('#totalMovieCount').text(`전체 영화: ${totalMovies}개`);
+        $('#duplicateMovieCount').text(`중복 영화: ${duplicateMovies}개`);
+        $('#uniqueMovieCount').text(`검색 영화: ${uniqueMovies}개`);
 
         if (movies.length === 0) {
           movieGrid.html('<p class="text-center w-100">검색 결과가 없습니다.</p>');

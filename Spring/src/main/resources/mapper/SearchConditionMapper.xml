@@ -5,9 +5,11 @@
     <insert id="save" parameterType="com.example.demo.model.SearchCondition" 
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO SearchCondition (
-            nation, startYear, endYear, title, actor, director
+            nation, startYear, endYear, title, actor, director, 
+            totalMovies, uniqueMovies
         ) VALUES (
-            #{nation}, #{startYear}, #{endYear}, #{title}, #{actor}, #{director}
+            #{nation}, #{startYear}, #{endYear}, #{title}, #{actor}, #{director},
+            #{totalMovies}, #{uniqueMovies}
         )
     </insert>
     
@@ -27,5 +29,12 @@
     <select id="findById" parameterType="integer" resultType="com.example.demo.model.SearchCondition">
         SELECT * FROM SearchCondition WHERE id = #{id}
     </select>
+    
+    <update id="updateMovieCounts">
+        UPDATE SearchCondition 
+        SET totalMovies = #{totalMovies},
+            uniqueMovies = #{uniqueMovies}
+        WHERE id = #{id}
+    </update>
     
 </mapper> 

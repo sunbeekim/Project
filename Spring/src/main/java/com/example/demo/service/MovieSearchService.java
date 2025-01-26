@@ -48,7 +48,16 @@ public class MovieSearchService {
             SearchCondition existingCondition = searchConditionMapper.findByConditions(searchCondition);
             if (existingCondition != null) {
                 log.info("기존 검색 결과 존재 - searchConditionId: {}", existingCondition.getId());
-                return movieCacheService.getCachedResult(existingCondition.getId());
+                
+                JsonNode cachedResult = movieCacheService.getCachedResult(existingCondition.getId());
+                
+                // 통계 정보 추가
+                ((ObjectNode) cachedResult).put("totalMovies", existingCondition.getTotalMovies());
+                ((ObjectNode) cachedResult).put("uniqueMovies", existingCondition.getUniqueMovies());
+                ((ObjectNode) cachedResult).put("duplicateMovies", 
+                    existingCondition.getTotalMovies() - existingCondition.getUniqueMovies());
+                
+                return cachedResult;
             }
 
             List<String> responses = new ArrayList<>();
@@ -87,7 +96,7 @@ public class MovieSearchService {
 
             log.info("검색 결과 병합 시작 - 응답 수: {}", responses.size());
             // 결과 병합
-            JsonNode mergedResult = mergeResults(responses);
+            JsonNode mergedResult = mergeResults(responses, searchCondition);
 
             // 검색 조건과 결과 저장
             log.info("검색 결과 저장 시작");
@@ -117,7 +126,7 @@ public class MovieSearchService {
         return emptyResult;
     }
 
-    private JsonNode mergeResults(List<String> responses) throws Exception {
+    private JsonNode mergeResults(List<String> responses, SearchCondition searchCondition) throws Exception {
         ObjectNode mergedResult = objectMapper.createObjectNode();
         ArrayNode mergedData = objectMapper.createArrayNode();
         ObjectNode dataObject = objectMapper.createObjectNode();
@@ -125,6 +134,7 @@ public class MovieSearchService {
         
         Set<String> uniqueMovieSeqs = new HashSet<>();
         int totalCount = 0;
+        int totalMoviesBeforeDuplication = 0;
 
         for (String response : responses) {
             JsonNode result = objectMapper.readTree(response);
@@ -132,6 +142,9 @@ public class MovieSearchService {
             totalCount += result.path("TotalCount").asInt(0);
             
             if (movies.isArray()) {
+                int currentMoviesCount = movies.size();
+                totalMoviesBeforeDuplication += currentMoviesCount;
+                
                 for (JsonNode movie : movies) {
                     String movieSeq = movie.path("movieSeq").asText();
                     if (uniqueMovieSeqs.add(movieSeq)) {
@@ -141,11 +154,29 @@ public class MovieSearchService {
             }
         }
 
+        int uniqueMoviesCount = uniqueMovieSeqs.size();
+        int duplicateCount = totalMoviesBeforeDuplication - uniqueMoviesCount;
+        
+        // 검색 조건에 통계 정보 설정
+        searchCondition.setTotalMovies(totalMoviesBeforeDuplication);
+        searchCondition.setUniqueMovies(uniqueMoviesCount);
+        
+        log.info("영화 검색 결과 통계:");
+        log.info("- 총 API 응답 수: {}", responses.size());
+        log.info("- 전체 영화 수 (중복 포함): {}", totalMoviesBeforeDuplication);
+        log.info("- 중복 제거된 영화 수: {}", uniqueMoviesCount);
+        log.info("- 중복된 영화 수: {}", duplicateCount);
+        
         dataObject.put("TotalCount", totalCount);
         dataObject.set("Result", movieArray);
         mergedData.add(dataObject);
         mergedResult.set("Data", mergedData);
         mergedResult.put("TotalCount", totalCount);
+        
+        // 통계 정보 추가
+        mergedResult.put("totalMovies", totalMoviesBeforeDuplication);
+        mergedResult.put("uniqueMovies", uniqueMoviesCount);
+        mergedResult.put("duplicateMovies", duplicateCount);
 
         return mergedResult;
     }
