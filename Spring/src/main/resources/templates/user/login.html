@@ -39,8 +39,8 @@
     <footer th:replace="fragments/footer :: footer"></footer>
 
     <script>
-      $(document).ready(function () {
-        $('#loginForm').on('submit', function (e) {
+      $(document).ready(() => {
+        $('#loginForm').on('submit', (e) => {
           e.preventDefault();
 
           const formData = {
@@ -49,11 +49,11 @@
           };
 
           UserAPI.login(formData)
-            .then(function (response) {
+            .then((response) => {
               alert('로그인 되었습니다.');
               location.href = '/';
             })
-            .catch(function (error) {
+            .catch((error) => {
               alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
             });
         });

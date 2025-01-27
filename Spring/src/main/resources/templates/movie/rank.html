@@ -3,6 +3,7 @@
   <head th:replace="fragments/header :: header">
     <meta charset="UTF-8" />
     <title>영화 순위</title>
+    <!--차트 공통 스타일-->
     <style>
       .chart-container {
         height: 400px;
@@ -79,7 +80,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
       // 1. 페이지 로드 시 실행
-      $(document).ready(function () {
+      $(document).ready(() => {
         // 1-1. 박스오피스 데이터 로드 함수 호출
         loadBoxOffice();
         // 1-2. Google Charts 라이브러리 초기화
@@ -87,18 +88,18 @@
       });
 
       // 2. 박스오피스 데이터 로드 함수
-      function loadBoxOffice() {
+      const loadBoxOffice = () => {
         $('#rankList').html('<div class="text-center">박스오피스 데이터 로딩 중...</div>'); // 로딩 중 표시
 
         // 2-1. MovieAPI를 통해 박스오피스 데이터 요청
         MovieAPI.getBoxOffice()
-          .then(function (response) {
+          .then((response) => {
             const movies = response.boxOfficeResult.dailyBoxOfficeList;
             // 2-2. 영화 목록을 화면에 표시
             displayMovies(movies);
             console.log(movies);
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.error('박스오피스 데이터 로드 실패:', error);
             $('#rankList').html(
               '<div class="text-center text-danger">데이터를 불러오는데 실패했습니다.</div>'
@@ -107,7 +108,7 @@
       }
 
       // 2-3. 영화 리스트 표시
-      function displayMovies(movies) {
+      const displayMovies = (movies) => {
         const rankList = $('#rankList'); 
         rankList.empty(); // API 호출 때 셋팅한 로딩 중 표시 제거
 
@@ -171,17 +172,7 @@
 // 3. body에 차트 추가
 //========================================================================================================//
       // 모달에 표시 할 차트 목록
-
-      // 아아앙아아아아아아아
-
-      // 원래 여기에 적었던 거죠?네
-    
-	const test = () => {
-    			  
-    	}
-	// test 2
-
-      function showMovieAnalysis(selectedMovie, movies) {
+        const showMovieAnalysis = (selectedMovie, movies) => {
         const averages = calculateAverages(movies);
         
         // 1. 관객수 관련 차트
@@ -207,7 +198,7 @@
       }
 //========================================================================================================//
       // 평균 계산
-      function calculateAverages(movies) {
+      const calculateAverages = (movies) => {
         return {
           // reduce 함수 사용 - 배열을 하나의 값으로 만들기
           // sum : 객체 movies를 reduce ((누적값(변수) , movie : 배열의 요소) => 누적값 + 배열의 요소), 0:누적초기값 ) = 배열 요소의 총합 / movies.length : 배열의 길이
@@ -255,7 +246,7 @@
      
 
       // 1. 박스오피스 차트
-      function drawBoxOfficeChart(selectedMovie, movies) {
+      const drawBoxOfficeChart = (selectedMovie, movies) => {
         // 1-1. Google Charts 데이터테이블 생성
         const data = new google.visualization.DataTable();
         // 1-2. 컬럼 정의
@@ -296,7 +287,7 @@
 
 //========================================================================================================//
       // 2. 관객 1인당 매출 차트 그리기
-      function drawDistributionChart(movies, selectedMovie) {
+      const drawDistributionChart = (movies, selectedMovie) => {
         const data = new google.visualization.DataTable();
         data.addColumn('string', '영화명');
         data.addColumn('number', '관객 1인당 매출 (원)');
@@ -338,7 +329,7 @@
       }
 //========================================================================================================//
       // 3. 누적매출 차트 그리기
-      function drawSalesChart(movies, averages) {
+      const drawSalesChart = (movies, averages) => {
         const data = new google.visualization.DataTable();
         data.addColumn('string', '순위');
         data.addColumn('number', '누적매출');
@@ -429,7 +420,7 @@
       }
 //========================================================================================================//
       // 5. 일일 매출 차트 그리기
-      function drawDailySalesChart(movies, averages) {
+      const drawDailySalesChart = (movies, averages) => {
         const data = new google.visualization.DataTable();
         data.addColumn('string', '순위');
         data.addColumn('number', '일일 매출');
