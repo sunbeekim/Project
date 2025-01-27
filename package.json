@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "d3-scale": "^4.0.2",
-    "react-wordcloud": "^1.2.7"
-  }
-}
