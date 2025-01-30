@@ -2,6 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head th:replace="fragments/header :: header">
     <title>회원가입</title>
+    <style>
+      .is-valid {
+        border-color: #28a745;
+      }
+      .is-invalid {
+        border-color: #dc3545;
+      }
+      .invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875em;
+      }
+    </style>
   </head>
   <body class="bg-light d-flex flex-column min-vh-100">
     <nav th:replace="fragments/header :: nav"></nav>
@@ -18,7 +31,14 @@
                 <div class="mb-3">
                   <label class="form-label">아이디</label>
                   <div class="input-group">
-                    <input type="text" class="form-control" name="userId" required />
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="userId"
+                      required
+                      data-regex="^[a-zA-Z0-9]{4,20}$"
+                      data-error-message="아이디는 영문, 숫자 조합 4-20자여야 합니다."
+                    />
                     <button type="button" class="btn btn-outline-secondary" id="checkIdBtn">
                       중복확인
                     </button>
@@ -28,28 +48,63 @@
 
                 <div class="mb-3">
                   <label class="form-label">비밀번호</label>
-                  <input type="password" class="form-control" name="password" required />
+                  <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    required
+                    data-regex="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$"
+                    data-error-message="비밀번호는 영문, 숫자, 특수문자 조합 8-20자여야 합니다."
+                  />
                   <div class="form-text">영문, 숫자, 특수문자 조합 8-20자</div>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">비밀번호 확인</label>
-                  <input type="password" class="form-control" name="passwordConfirm" required />
+                  <input
+                    type="password"
+                    class="form-control"
+                    name="passwordConfirm"
+                    required
+                    data-regex="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$"
+                    data-error-message="비밀번호는 영문, 숫자, 특수문자 조합 8-20자여야 합니다."
+                  />
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">이름</label>
-                  <input type="text" class="form-control" name="forename" required />
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="forename"
+                    required
+                    data-regex="^[가-힣]{2,10}$"
+                    data-error-message="이름은 한글 2-10자여야 합니다."
+                  />
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">이메일</label>
-                  <input type="email" class="form-control" name="email" required />
+                  <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    required
+                    data-regex="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                    data-error-message="올바른 이메일 형식이 아닙니다."
+                  />
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">전화번호</label>
-                  <input type="tel" class="form-control" name="phoneNumber" required />
+                  <input
+                    type="tel"
+                    class="form-control"
+                    name="phoneNumber"
+                    required
+                    data-regex="^[0-9]{10,11}$"
+                    data-error-message="전화번호는 10-11자리의 숫자만 입력해주세요."
+                  />
                   <div class="form-text">'-' 없이 숫자만 입력</div>
                 </div>
 
@@ -72,9 +127,53 @@
       $(document).ready(() => {
         let userIdCheck = false;
 
+        // 아이디 입력 필드 변경 시 userIdCheck 초기화
+        $('input[name="userId"]').on('input', (e) => {
+          userIdCheck = false;
+          $(e.currentTarget).removeClass('is-valid is-invalid');
+        });
+
+        // 실시간 입력 검증
+        $('input').on('input', (e) => {
+          const $input = $(e.currentTarget);
+          const value = $input.val();
+          const regex = new RegExp($input.data('regex'));
+          const errorMessage = $input.data('error-message');
+
+          if (regex.test(value)) {
+            $input.removeClass('is-invalid').addClass('is-valid');
+            $input.siblings('.invalid-feedback').remove();
+          } else {
+            $input.removeClass('is-valid').addClass('is-invalid');
+            if ($input.siblings('.invalid-feedback').length === 0) {
+              $input.after(`<div class="invalid-feedback">${errorMessage}</div>`);
+            }
+          }
+        });
+
+        // 비밀번호 확인 실시간 검증
+        $('input[name="passwordConfirm"]').on('input', (e) => {
+          const $confirmInput = $(e.currentTarget);
+          const password = $('input[name="password"]').val();
+          const passwordConfirm = $confirmInput.val();
+
+          if (password === passwordConfirm) {
+            $confirmInput.removeClass('is-invalid').addClass('is-valid');
+            $confirmInput.siblings('.invalid-feedback').remove();
+          } else {
+            $confirmInput.removeClass('is-valid').addClass('is-invalid');
+            if ($confirmInput.siblings('.invalid-feedback').length === 0) {
+              $confirmInput.after(
+                '<div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>'
+              );
+            }
+          }
+        });
+
         // 아이디 중복 체크
-        $('#checkIdBtn').on('click', function () {
-          const userId = $('input[name="userId"]').val();
+        $('#checkIdBtn').on('click', (e) => {
+          const $userIdInput = $('input[name="userId"]');
+          const userId = $userIdInput.val();
 
           if (!userId) {
             alert('아이디를 입력해주세요.');
@@ -87,12 +186,14 @@
           }
 
           UserAPI.checkId(userId)
-            .then((response) => {
+            .then(() => {
               userIdCheck = true;
+              $userIdInput.removeClass('is-invalid').addClass('is-valid');
               alert('사용 가능한 아이디입니다.');
             })
-            .catch((error) => {
+            .catch(() => {
               userIdCheck = false;
+              $userIdInput.removeClass('is-valid').addClass('is-invalid');
               alert('이미 사용중인 아이디입니다.');
             });
         });

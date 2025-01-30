@@ -41,7 +41,7 @@
     <footer th:replace="fragments/footer :: footer"></footer>
 
     <script th:inline="javascript">
-      $(document).ready(function () {
+      $(document).ready(() => {
         const id = new URLSearchParams(window.location.search).get('id');
         const currentUser = /*[[${session.userId}]]*/ null;
 
@@ -53,7 +53,7 @@
 
         // 게시글 조회
         BoardAPI.getBoardById(id)
-          .then(function (board) {
+          .then((board) => {
             // 작성자 체크
             if (!currentUser || currentUser !== board.boardId) {
               alert('수정 권한이 없습니다.');
@@ -65,14 +65,14 @@
             $('input[name="title"]').val(board.title);
             $('textarea[name="content"]').val(board.content);
           })
-          .catch(function (error) {
+          .catch((error) => {
             console.error('게시글 조회 실패:', error);
             alert('게시글을 불러오는데 실패했습니다.');
             location.href = '/board/list';
           });
 
         // 폼 제출
-        $('#editForm').on('submit', function (e) {
+        $('#editForm').on('submit', (e) => {
           e.preventDefault();
 
           const formData = {
@@ -93,11 +93,11 @@
           }
 
           BoardAPI.updateBoard(id, formData)
-            .then(function () {
+            .then(() => {
               alert('게시글이 수정되었습니다.');
               location.href = '/board/read?id=' + id;
             })
-            .catch(function (error) {
+            .catch((error) => {
               console.error('게시글 수정 실패:', error);
               alert('게시글 수정에 실패했습니다.');
             });

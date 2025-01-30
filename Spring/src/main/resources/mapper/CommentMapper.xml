@@ -26,7 +26,7 @@
         )
         SELECT * FROM CommentHierarchy
         ORDER BY 
-            SUBSTRING_INDEX(path, ',', 1) ASC,  -- 최상위 댓글은 최신순
+            SUBSTRING_INDEX(path, ',', 1) DESC,  -- 최상위 댓글은 최신순
             path ASC                             -- 대댓글은 작성순
     </select>
     

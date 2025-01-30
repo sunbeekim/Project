@@ -7,11 +7,20 @@ const MovieAPI = {
     const targetDate = yesterday.toISOString().split('T')[0].replace(/-/g, '');
 
     return $.ajax({
-      url: '/api/movie/boxoffice/daily',
+      url: '/api/movies/boxoffice/daily',
       method: 'GET',
       data: {
         targetDt: targetDate
       }
+    });
+  },
+
+  // 영화 검색 API
+  searchMovies: (params) => {
+    return $.ajax({
+      url: '/api/movies/search',
+      method: 'GET',
+      data: params
     });
   }
 };

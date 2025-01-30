@@ -1,5 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <style>
+      .comment-thread {
+        position: relative;
+      }
+
+      .comment-thread::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+        display: none;
+      }
+
+      .comment-thread:has(.card[style*='margin-left']) ::before {
+        display: block;
+      }
+
+      .card[style*='margin-left'] {
+        position: relative;
+      }
+
+      .card[style*='margin-left']::before {
+        content: '';
+        position: absolute;
+        left: -20px;
+        top: 20px;
+        width: 20px;
+        height: 2px;
+        background: #e9ecef;
+      }
+    </style>
+  </head>
   <body>
     <div th:fragment="comments">
       <div class="mt-5">
@@ -35,7 +71,7 @@
       </div>
 
       <script th:inline="javascript">
-        $(document).ready(function () {
+        $(document).ready(() => {
           const boardId = new URLSearchParams(window.location.search).get('id');
           const currentUser = /*[[${session.userId}]]*/ null;
           const userForename = /*[[${session.forename}]]*/ null;
@@ -46,12 +82,12 @@
           }
 
           // 댓글쓰기 버튼 클릭 이벤트
-          $('#commentBtn').on('click', function () {
+          $('#commentBtn').on('click', () => {
             $('#commentForm').slideToggle();
           });
 
           // 댓글 등록 버튼 클릭 이벤트
-          $('#submitComment').on('click', function () {
+          $('#submitComment').on('click', () => {
             const content = $('#commentContent').val().trim();
 
             if (!content) {
@@ -69,34 +105,34 @@
             };
 
             CommentAPI.createComment(commentData)
-              .then(function (response) {
+              .then((response) => {
                 alert('댓글이 등록되었습니다.');
                 $('#commentContent').val('');
                 $('#commentForm').slideUp();
                 loadComments();
               })
-              .catch(function (error) {
+              .catch((error) => {
                 console.error('댓글 등록 실패:', error);
                 alert('댓글 등록에 실패했습니다.');
               });
           });
 
           // 모든 이벤트 핸들러 제거
-          function removeEventHandlers() {
+          const removeEventHandlers = () => {
             $(document).off('click', '.reply-comment');
             $(document).off('click', '.submit-reply');
             $(document).off('click', '.delete-comment');
             $('.reply-comment').off('click');
-          }
+          };
 
           // 이벤트 핸들러 초기화
-          function initializeEventHandlers() {
+          const initializeEventHandlers = () => {
             removeEventHandlers();
 
             // 답글 버튼 클릭 이벤트
-            $('.reply-comment').on('click', function (e) {
+            $('.reply-comment').on('click', (e) => {
               e.preventDefault();
-              const commentId = $(this).data('comment-id');
+              const commentId = $(e.currentTarget).data('comment-id');
               // 다른 모든 답글 폼은 닫기
               $('.replyForm').not(`#replyForm-${commentId}`).slideUp();
               // 해당 답글 폼만 토글
@@ -104,10 +140,12 @@
             });
 
             // 답글 등록 버튼 클릭 이벤트
-            $(document).on('click', '.submit-reply', function () {
-              const parentId = $(this).data('parent-id');
-              const depth = $(this).data('depth');
-              const content = $(this).closest('.card').find('.reply-content').val().trim();
+            $(document).on('click', '.submit-reply', (e) => {
+              e.preventDefault();
+              const $button = $(e.currentTarget);
+              const parentId = $button.data('parent-id');
+              const depth = $button.data('depth');
+              const content = $button.closest('.card').find('.reply-content').val().trim();
 
               if (!content) {
                 alert('답글 내용을 입력해주세요.');
@@ -124,132 +162,140 @@
               };
 
               CommentAPI.createComment(replyData)
-                .then(function (response) {
+                .then((response) => {
                   alert('답글이 등록되었습니다.');
                   $(`#replyForm-${parentId}`).slideUp();
                   $(`#replyForm-${parentId} .reply-content`).val('');
                   loadComments();
                 })
-                .catch(function (error) {
+                .catch((error) => {
                   console.error('답글 등록 실패:', error);
                   alert('답글 등록에 실패했습니다.');
                 });
             });
 
             // 삭제 버튼 클릭 이벤트
-            $(document).on('click', '.delete-comment', function () {
-              const commentId = $(this).data('comment-id');
+            $(document).on('click', '.delete-comment', (e) => {
+              e.preventDefault();
+              const commentId = $(e.currentTarget).data('comment-id');
               if (confirm('댓글을 삭제하시겠습니까?')) {
                 CommentAPI.deleteComment(commentId)
-                  .then(function () {
+                  .then(() => {
                     alert('댓글이 삭제되었습니다.');
                     loadComments();
                   })
-                  .catch(function (error) {
+                  .catch((error) => {
                     console.error('댓글 삭제 실패:', error);
                     alert('댓글 삭제에 실패했습니다.');
                   });
               }
             });
-          }
+          };
 
           // 댓글 목록 로드 함수
-          function loadComments() {
+          const loadComments = () => {
             CommentAPI.getComments(boardId)
-              .then(function (comments) {
+              .then((comments) => {
                 const commentList = $('#commentList');
                 commentList.empty();
 
                 // 댓글 맵 생성 (부모 댓글 정보 조회용)
                 const commentMap = new Map(comments.map((c) => [c.id, c]));
 
-                comments.forEach(function (comment) {
+                comments.forEach((comment) => {
                   const marginLeft = comment.depth > 0 ? `ms-${comment.depth * 4}` : '';
-                  // 부모 댓글 정보 가져오기
                   const parentComment = comment.parentId ? commentMap.get(comment.parentId) : null;
 
                   const commentHtml = `
-                                    <div class="card mb-3 ${marginLeft}">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <div>
-                                                    <span class="fw-bold me-2">${
-                                                      comment.forename
-                                                    }</span>
-                                                    <small class="text-muted">${new Date(
-                                                      comment.createAt
-                                                    ).toLocaleString()}</small>
-                                                </div>
-                                                <div>
-                                                    ${
-                                                      currentUser && comment.userId !== currentUser
-                                                        ? `
-                                                        <button class="btn btn-sm btn-outline-secondary reply-comment" 
-                                                                data-comment-id="${comment.id}"
-                                                                data-author="${comment.forename}">
-                                                            답글
-                                                        </button>
-                                                    `
-                                                        : ''
-                                                    }
-                                                    ${
-                                                      comment.userId === currentUser
-                                                        ? `
-                                                        <button class="btn btn-sm btn-outline-danger delete-comment" data-comment-id="${comment.id}">삭제</button>
-                                                    `
-                                                        : ''
-                                                    }
-                                                </div>
-                                            </div>
-                                            ${
-                                              comment.parentId
-                                                ? `
-                                                <div class="mb-2">
-                                                    <small class="text-muted">
-                                                        <i class="bi bi-arrow-return-right me-1"></i>
-                                                        <span class="fw-bold">${parentComment.forename}</span>님에게 보내는 답글
-                                                    </small>
-                                                </div>
+                    <div class="comment-thread">
+                        <!-- 댓글 카드 -->
+                        <div class="card mb-2 ${marginLeft}" style="${
+                    comment.depth > 0 ? `margin-left: ${comment.depth * 40}px;` : ''
+                  }">
+                            <div class="card-body">
+                                ${
+                                  comment.parentId
+                                    ? `
+                                    <div class="mb-2">
+                                        <small class="text-muted d-flex align-items-center">
+                                            <i class="bi bi-arrow-return-right me-2"></i>
+                                            <span class="fw-bold">${parentComment.forename}</span>님에게 보내는 답글
+                                        </small>
+                                    </div>
+                                    `
+                                    : ''
+                                }
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <span class="fw-bold me-2">${comment.forename}</span>
+                                        <small class="text-muted">${new Date(
+                                          comment.createAt
+                                        ).toLocaleString()}</small>
+                                    </div>
+                                    <div>
+                                        ${
+                                          currentUser && comment.userId !== currentUser
+                                            ? `
+                                            <button class="btn btn-sm btn-outline-secondary reply-comment" 
+                                                    data-comment-id="${comment.id}"
+                                                    data-author="${comment.forename}">
+                                                답글
+                                            </button>
                                             `
-                                                : ''
-                                            }
-                                            <p class="card-text">${comment.content}</p>
-                                        </div>
+                                            : ''
+                                        }
+                                        ${
+                                          comment.userId === currentUser
+                                            ? `
+                                            <button class="btn btn-sm btn-outline-danger delete-comment" 
+                                                    data-comment-id="${comment.id}">삭제</button>
+                                            `
+                                            : ''
+                                        }
                                     </div>
+                                </div>
+                                <p class="card-text">${comment.content}</p>
+                            </div>
+                        </div>
 
-                                    <div id="replyForm-${
-                                      comment.id
-                                    }" class="card mb-3 ${marginLeft} ms-4 replyForm" style="display: none;">
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <small class="text-muted">
-                                                    <i class="bi bi-arrow-return-right me-1"></i>
-                                                    <span class="fw-bold">${
-                                                      comment.forename
-                                                    }</span>님에게 답글 작성 중
-                                                </small>
-                                            </div>
-                                            <textarea class="form-control mb-3 reply-content" rows="3" placeholder="답글을 입력하세요..."></textarea>
-                                            <div class="d-flex justify-content-end">
-                                                <button type="button" class="btn btn-primary submit-reply" 
-                                                        data-parent-id="${comment.id}" 
-                                                        data-depth="${comment.depth + 1}">
-                                                    <i class="bi bi-chat-dots me-1"></i>답글 등록
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
+                        <!-- 답글 작성 폼 (숨김 상태) -->
+                        <div id="replyForm-${comment.id}" 
+                             class="replyForm card mb-2" 
+                             style="display: none; margin-left: ${(comment.depth + 1) * 40}px;">
+                            <div class="card-body bg-light">
+                                <div class="mb-3">
+                                    <small class="text-muted">
+                                        <i class="bi bi-arrow-return-right me-1"></i>
+                                        <span class="fw-bold">${
+                                          comment.forename
+                                        }</span>님에게 답글 작성 중
+                                    </small>
+                                </div>
+                                <textarea class="form-control mb-3 reply-content" 
+                                          rows="3" 
+                                          placeholder="답글을 입력하세요..."></textarea>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" 
+                                            class="btn btn-primary submit-reply" 
+                                            data-parent-id="${comment.id}" 
+                                            data-depth="${comment.depth + 1}">
+                                        <i class="bi bi-chat-dots me-1"></i>답글 등록
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
                   commentList.append(commentHtml);
                 });
 
                 // 이벤트 핸들러 다시 초기화
                 initializeEventHandlers();
               })
-              .catch(function (error) {
+              .catch((error) => {
                 console.error('댓글 목록 로드 실패:', error);
               });
-          }
+          };
 
           // 초기 댓글 목록 로드
           loadComments();

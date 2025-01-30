@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.SearchConditionMapper">
+    
+    <insert id="save" parameterType="com.example.demo.model.SearchCondition" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO SearchCondition (
+            nation, startYear, endYear, title, actor, director, 
+            totalMovies, uniqueMovies
+        ) VALUES (
+            #{nation}, #{startYear}, #{endYear}, #{title}, #{actor}, #{director},
+            #{totalMovies}, #{uniqueMovies}
+        )
+    </insert>
+    
+    <select id="findByConditions" parameterType="com.example.demo.model.SearchCondition" 
+            resultType="com.example.demo.model.SearchCondition">
+        SELECT * FROM SearchCondition 
+        WHERE (nation = #{nation} OR (#{nation} IS NULL AND nation IS NULL))
+        AND (startYear = #{startYear} OR (#{startYear} IS NULL AND startYear IS NULL))
+        AND (endYear = #{endYear} OR (#{endYear} IS NULL AND endYear IS NULL))
+        AND (title = #{title} OR (#{title} IS NULL AND title IS NULL))
+        AND (actor = #{actor} OR (#{actor} IS NULL AND actor IS NULL))
+        AND (director = #{director} OR (#{director} IS NULL AND director IS NULL))
+        ORDER BY createdAt DESC
+        LIMIT 1
+    </select>
+    
+    <select id="findById" parameterType="integer" resultType="com.example.demo.model.SearchCondition">
+        SELECT * FROM SearchCondition WHERE id = #{id}
+    </select>
+    
+    <update id="updateMovieCounts">
+        UPDATE SearchCondition 
+        SET totalMovies = #{totalMovies},
+            uniqueMovies = #{uniqueMovies}
+        WHERE id = #{id}
+    </update>
+    
+</mapper> 

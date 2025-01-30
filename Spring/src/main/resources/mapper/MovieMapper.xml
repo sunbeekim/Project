@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.MovieResultMapper">
+    
+    <insert id="save" parameterType="com.example.demo.model.MovieResult">
+        INSERT INTO MovieResult (
+            searchConditionId, movieSeq, title, titleEng, 
+            directorNm, actorNm, genre, nation, prodYear, 
+            plot, plots, directors, actors, posters,
+            runtime, rating, posterUrl, company
+        ) VALUES (
+            #{searchConditionId}, #{movieSeq}, #{title}, #{titleEng}, 
+            #{directorNm}, #{actorNm}, #{genre}, #{nation}, #{prodYear}, 
+            #{plot}, #{plots}, #{directors}, #{actors}, #{posters},
+            #{runtime}, #{rating}, #{posterUrl}, #{company}
+        )
+    </insert>
+    
+    <select id="findBySearchConditionId" resultType="com.example.demo.model.MovieResult">
+        SELECT * FROM MovieResult 
+        WHERE searchConditionId = #{searchConditionId}
+    </select>
+    
+    <select id="findByMovieCd" resultType="com.example.demo.model.MovieResult">
+        SELECT * FROM MovieResult 
+        WHERE movieSeq = #{movieCd}
+        LIMIT 1
+    </select>
+    
+</mapper> 

@@ -24,15 +24,18 @@ dependencies {
 
 	implementation 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'	
 
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
-  implementation 'jakarta.servlet:jakarta.servlet-api'
-    
+ 	 implementation 'jakarta.servlet:jakarta.servlet-api'
+    //webclient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-  // Thymeleaf 관련 의존성
-  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-  implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+ 	 // Thymeleaf 관련 의존성
+ 	 implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+ 	 implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+    // Spring Boot의 Jackson 의존성 관리 사용
+    implementation 'org.springframework.boot:spring-boot-starter-json'
 }
 
