@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 박스오피스 데이터 로드
-function loadBoxOfficeData() {
+const loadBoxOfficeData = () => {
   $('#rankList').html('<div class="text-center">박스오피스 데이터 로딩 중...</div>');
 
   MovieAPI.getBoxOffice()
@@ -31,7 +31,7 @@ function loadBoxOfficeData() {
 }
 
 // 영화 카드 표시
-function displayMovies(movies) {
+const displayMovies = (movies) => {
   const rankList = $('#rankList');
   rankList.empty();
 
@@ -42,7 +42,7 @@ function displayMovies(movies) {
 }
 
 // 영화 카드 생성
-function createMovieCard(movie, movies) {
+const createMovieCard = (movie, movies) => {
   return ` 
         <div class="col-md-4 col-lg-3"> 
             <div class="card h-100" style="cursor: pointer" onclick="showMovieAnalysis(${JSON.stringify(

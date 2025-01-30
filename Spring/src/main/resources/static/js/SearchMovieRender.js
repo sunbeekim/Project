@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 검색 처리 함수
-async function handleSearch() {
+const handleSearch = async () => {
   showLoading(true);
 
   try {
@@ -49,7 +49,7 @@ async function handleSearch() {
 }
 
 // 영화 목록 표시 함수
-function displayMovies(movies, response) {
+const displayMovies = (movies, response) => {
   const movieGrid = $('#movieGrid');
   movieGrid.empty();
 
@@ -107,7 +107,7 @@ function displayMovies(movies, response) {
 }
 
 // 영화 상세 정보 표시 함수
-function showMovieDetail(movie) {
+const showMovieDetail = (movie) => {
   document.getElementById('movieDetailTitle').textContent = movie.title;
 
   const posterContainer = document.getElementById('posterContainer');
@@ -137,12 +137,12 @@ function showMovieDetail(movie) {
 }
 
 // 로딩 표시 함수
-function showLoading(show) {
+const showLoading = (show) => {
   $('#loadingSpinner').toggle(show);
 }
 
 // 채팅창 토글 함수
-function toggleChat() {
+const toggleChat = () => {
   const chatWindow = document.querySelector('.chat-window');
   const chatButton = document.querySelector('.chat-button');
 

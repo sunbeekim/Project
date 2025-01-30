@@ -1,5 +1,5 @@
 // 초기화
-function initializeBoxOffice() {
+const initializeBoxOffice = () => {
   $(document).ready(() => {
     createChartModal();
     loadBoxOfficeData();
@@ -8,7 +8,7 @@ function initializeBoxOffice() {
 }
 
 // 데이터 로드
-function loadBoxOfficeData() {
+const loadBoxOfficeData = () => {
   $('#rankList').html('<div class="text-center">박스오피스 데이터 로딩 중...</div>');
 
   MovieAPI.getBoxOffice()
@@ -26,7 +26,7 @@ function loadBoxOfficeData() {
 }
 
 // 영화 카드 표시
-function displayBoxOfficeMovies(movies) {
+const displayBoxOfficeMovies = (movies) => {
   const rankList = $('#rankList');
   rankList.empty();
 

@@ -1,4 +1,4 @@
-function processChartData(movies) {
+const processChartData = (movies) => {
   // 장르 데이터 처리
   const genreCount = {};
   movies.forEach((movie) => {
@@ -63,7 +63,7 @@ function processChartData(movies) {
   $('#chartContainer').show();
 }
 
-function drawGenreHeatmap(movies) {
+const drawGenreHeatmap = (movies) => {
   // 년도별 장르 카운트 데이터 준비
   const yearGenreCounts = {};
   const genres = new Set();
@@ -152,7 +152,7 @@ function drawGenreHeatmap(movies) {
   }
 }
 
-function drawRuntimeChart(runtimeRanges) {
+const drawRuntimeChart = (runtimeRanges) => {
   // 1초 지연 후 차트 그리기 컨테이너 준비되면 렌더링 되게 바꿔야 함
   setTimeout(() => {
     const data = new google.visualization.DataTable();
