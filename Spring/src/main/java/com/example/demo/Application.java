@@ -20,16 +20,16 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    public CommandLineRunner test() {
-        return args -> {
-            log.info("MovieController 테스트 API 호출 시작");
-            try {
-                ResponseEntity<?> response = movieController.testSearch("봉준호");
-                log.info("MovieController 테스트 API 응답: {}", response.getBody());
-            } catch (Exception e) {
-                log.error("MovieController 테스트 API 호출 실패", e);
-            }
-        };
-    }
+    // @Bean
+    // public CommandLineRunner test() {
+    //     return args -> {
+    //         log.info("MovieController 테스트 API 호출 시작");
+    //         try {
+    //             ResponseEntity<?> response = movieController.testSearch("봉준호");
+    //             log.info("MovieController 테스트 API 응답: {}", response.getBody());
+    //         } catch (Exception e) {
+    //             log.error("MovieController 테스트 API 호출 실패", e);
+    //         }
+    //     };
+    // }
 }
