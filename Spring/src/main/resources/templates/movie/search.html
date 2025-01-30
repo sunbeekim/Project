@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head th:replace="fragments/header :: header">
+    
     <meta charset="UTF-8" />
     <title>영화 검색</title>
   </head>
@@ -191,6 +192,8 @@
       </div>
       
       <footer th:replace="fragments/footer :: footer"></footer>
+      <script th:src="@{/static/js/SearchMovieRender.js}"></script>
+      <script th:src="@{/static/js/SearchMovieChart.js}"></script>
 
   </body>
 </html>
