@@ -1,12 +1,7 @@
-FROM openjdk:17-jdk-slim
+FROM nginx:latest
 
-WORKDIR /app
+COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY build/libs/*.jar app.jar
+EXPOSE 80
 
-ENV SERVER_NAME=subee.world
-ENV VIRTUAL_HOST=subee.world,www.subee.world
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "app.jar"] 
+CMD ["nginx", "-g", "daemon off;"]

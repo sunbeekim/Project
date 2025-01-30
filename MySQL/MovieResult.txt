@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS MovieResult (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Primary Key
+    searchConditionId INT NOT NULL, -- 외래 키
+    
+    -- 영화 정보 필드
+    movieSeq VARCHAR(20),
+    title VARCHAR(200),
+    titleEng VARCHAR(200),
+    directorNm VARCHAR(100),
+    actorNm TEXT,
+    genre VARCHAR(100),
+    nation VARCHAR(50),
+    prodYear VARCHAR(4),
+    plot TEXT, -- 기본 줄거리
+    plots JSON, -- 다중 언어 줄거리 저장
+    directors JSON, -- 감독 정보(JSON 형식)
+    actors JSON, -- 배우 정보(JSON 형식)
+    posters TEXT, -- 포스터 URL 리스트
+    
+    runtime VARCHAR(10),
+    rating VARCHAR(50),
+    posterUrl TEXT,
+    company VARCHAR(200),
+    
+    -- 검색 조건 테이블과의 외래 키 관계
+    FOREIGN KEY (searchConditionId) REFERENCES SearchCondition(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
