@@ -1,0 +1,9 @@
+[SearchCondition] ───(1:N)─── [MovieSearch] ───(N:1)─── [Movie]
+                                  │
+                                  ├──(N:M)─── [MovieDirector] ───(N:1)─── [Director]
+                                  │
+                                  ├──(N:M)─── [MovieActor] ───(N:1)─── [Actor]
+                                  │
+                                  ├──(1:N)─── [Poster]
+                                  │
+                                  ├──(1:N)─── [Plot]
