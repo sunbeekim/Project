@@ -3,7 +3,7 @@
 <mapper namespace="com.example.demo.mapper.MovieResultMapper">
     
     <insert id="save" parameterType="com.example.demo.model.MovieResult">
-        INSERT INTO MovieResult (
+        INSERT INTO movieresult (
             searchConditionId, movieSeq, title, titleEng, 
             directorNm, actorNm, genre, nation, prodYear, 
             plot, plots, directors, actors, posters,
@@ -17,12 +17,12 @@
     </insert>
     
     <select id="findBySearchConditionId" resultType="com.example.demo.model.MovieResult">
-        SELECT * FROM MovieResult 
+        SELECT * FROM movieresult 
         WHERE searchConditionId = #{searchConditionId}
     </select>
     
     <select id="findByMovieCd" resultType="com.example.demo.model.MovieResult">
-        SELECT * FROM MovieResult 
+        SELECT * FROM movieresult 
         WHERE movieSeq = #{movieCd}
         LIMIT 1
     </select>
