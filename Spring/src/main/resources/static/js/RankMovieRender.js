@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 박스오피스 데이터 로드
 const loadBoxOfficeData = () => {
-  $('#rankList').html('<div class="text-center">박스오피스 데이터 로딩 중...</div>');
+  $('#rankList').html('<div class="text-center">박스오피스 데이터 로딩 중...</div>'); // 로딩중 표시
 
   MovieAPI.getBoxOffice()
     .then((response) => {
@@ -33,7 +33,7 @@ const loadBoxOfficeData = () => {
 // 영화 카드 표시
 const displayMovies = (movies) => {
   const rankList = $('#rankList');
-  rankList.empty();
+  rankList.empty(); // 로딩중 표시 제거 데이터가 많으면 forEach가 끝나고 제거해야 할듯
 
   movies.forEach((movie) => {
     const card = createMovieCard(movie, movies);
@@ -42,7 +42,11 @@ const displayMovies = (movies) => {
 }
 
 // 영화 카드 생성
-const createMovieCard = (movie, movies) => {
+const createMovieCard = (movie, movies) => { // "movie" 객체를 받아서 영화 카드를 생성하는 함수
+  // JSON.stringify(movie)를 사용하여 movie 객체를 문자열로 변환
+  // /"/g 는 모든 따옴표를 치환하는 정규식
+  // &quot;로 변환하여 안전한 데이터로 만듬
+  // html 속성값은 ""로 구분되어 지는데, 객체에 있는 ""가 구문오류를 발생시킬 수 있음
   return ` 
         <div class="col-md-4 col-lg-3"> 
             <div class="card h-100" style="cursor: pointer" onclick="showMovieAnalysis(${JSON.stringify(
